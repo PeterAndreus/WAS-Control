@@ -1,0 +1,26 @@
+
+svnUpdate(){
+  
+  cd $COMMON_DEVEL 
+  svn update
+  
+  cd $ISIS_DEVEL
+  svn update
+  
+  cd $LOCAL_DIR
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+}
+svnBranchUpdate(){
+  cd $COMMON_DEVEL_BRANCH 
+  svn update
+  
+  cd $ISIS_DEVEL_BRANCH
+  svn update
+  
+  cd $LOCAL_DIR
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+}

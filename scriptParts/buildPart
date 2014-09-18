@@ -1,0 +1,280 @@
+
+
+showBuildLog(){
+  cat $BUILD_LOG | less
+}
+
+setBuildOptions(){
+  cd $LOCAL_DIR
+  clear
+  echo "Nastavenie BuildProfile"
+  echo "default: $PROFILE_BUILD"
+  echo
+  echo -n "vasa hodnota (nechaj prazdne pre default): "
+  read userProfileBuild
+  echo $userProfileBuild
+  if [ ! $userProfileBuild = "" ]
+  then
+    sed -i '0,/PROFILE_BUILD=".*"/{s,PROFILE_BUILD=".*",PROFILE_BUILD="'$userProfileBuild'",}' $0
+  fi
+  clear
+  echo "Nastavenie preskocenia Testov"
+  echo "default: $SKIP_TESTS"
+  echo
+  echo -n "vasa hodnota (nechaj prazdne pre default): "
+  read userSkipTests
+  echo $userSkipTests
+  if [ ! $userSkipTests = "" ]
+  then
+    sed -i '0,/SKIP_TESTS=".*"/{s,SKIP_TESTS=".*",SKIP_TESTS="'$userSkipTests'",}' $0
+  fi
+  
+  clear;
+  echo "Verzie su nastavene na :" 
+  echo "$(cat $(basename $0) | grep -x PROFILE_BUILD=".*")"
+  echo "$(cat $(basename $0) | grep -x SKIP_TESTS=".*")"
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+  cd $LOCAL_DIR
+  bash $(basename $0)
+  
+  exit
+}
+
+pomBuild(){
+  cd  $ISIS_DEVEL
+  
+  if [ "$PROFILE_BUILD" == "1" ]
+  then
+    PR_BUILD="-Pbuild"
+  else
+    PR_BUILD=""
+  fi
+  
+  if [ "$SKIP_TESTS" == "1" ]
+  then
+    TST_BUILD="-DskipTests=true"
+  else
+    TST_BUILD=""
+  fi
+  mvn clean install $PR_BUILD $TST_BUILD | tee $BUILD_LOG
+  cd $LOCAL_DIR
+}
+
+buildISISCommons(){
+  cd $ISIS_DEVEL/IsisCommon$BRANCH_SFX
+  touchMeGently './'
+  mvn clean install $1 $2
+}
+
+buildMETIS(){
+  cd $ISIS_DEVEL/Metis$BRANCH_SFX
+  touchMeGently './'
+  mvn clean install $1 $2
+}
+
+buildCommons(){
+  cd $COMMON_DEVEL
+  touchMeGently './'
+  mvn clean install  $1 $2
+}
+
+buildIAM(){
+  cd $ISIS_DEVEL/Iam$BRANCH_SFX
+  touchMeGently './'
+  mvn clean install  $1 $2
+}
+
+buildLogapp(){
+  cd $ISIS_DEVEL/LogApp$BRANCH_SFX
+  touchMeGently './'
+  mvn clean install  $1 $2
+}
+
+buildTaskapp(){
+  cd $ISIS_DEVEL/TaskApp$BRANCH_SFX
+  touchMeGently './'
+  mvn clean install $1 $2
+}
+
+buildPDB(){
+  cd $ISIS_DEVEL/PBD$BRANCH_SFX
+  touchMeGently './'
+  mvn clean install $1 $2
+}
+
+buildZBD(){
+  cd $ISIS_DEVEL/ZBD$BRANCH_SFX
+  touchMeGently './'
+  mvn clean install  $1 $2
+}
+
+buildScriptLang(){
+  cd  $ISIS_DEVEL/ScriptLang$BRANCH_SFX
+  touchMeGently './'
+  mvn clean install $1 $2
+}
+
+buildWebServices(){  
+  cd $ISIS_DEVEL/WebServices$BRANCH_SFX
+  touchMeGently './'
+  mvn clean install $1 $2
+}
+
+buildZber(){ 
+  cd $ISIS_DEVEL/Zber$BRANCH_SFX
+  touchMeGently './'
+  mvn clean install $1 $2
+}
+
+buildKRAZ(){
+  cd $ISIS_DEVEL/Kraz2$BRANCH_SFX
+  touchMeGently './'
+  mvn clean install $1 $2  
+}
+
+buildIntrastat(){
+  cd $ISIS_DEVEL/Intrastat$BRANCH_SFX
+  touchMeGently './'
+  mvn clean install $1 $2
+}
+
+buildRegis(){
+  cd $ISIS_DEVEL/Regis2$BRANCH_SFX
+  touchMeGently './'
+  mvn clean install $1 $2
+}
+
+
+cleanPartialBuildLog(){
+  if [ -f partialBuildLog.log ]
+  then
+    ERROR_POINTER="$( cat partialBuildLog.log | grep 'ERROR' -m1 -n| cut -d':' -f1 )"
+    FIRST_POINTER="$( cat partialBuildLog.log | grep 'Reactor Summary:' -m1 -n| cut -d':' -f1 )"
+    LAST_POINTER="$( cat partialBuildLog.log | grep 'Final Memory:' -m1 -n| cut -d':' -f1 )"
+    if [ "$ERROR_POINTER" != "" ]
+    then
+      sed "$FIRST_POINTER,$LAST_POINTER!d" partialBuildLog.log >> $BUILD_LOG
+      echo "" >> $BUILD_LOG
+      echo "-------------------------ERROR-------------------------" >> $BUILD_LOG
+      echo "" >> $BUILD_LOG
+      cat partialBuildLog.log |  grep 'ERROR' >> $BUILD_LOG
+    else
+      sed "$FIRST_POINTER,$LAST_POINTER!d" partialBuildLog.log >> $BUILD_LOG
+    fi
+    rm partialBuildLog.log
+  fi
+}
+
+partialBuild(){  
+  cleanPartialBuildLog
+  
+  case $1 in
+    a* ) buildMETIS $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+	  partialBuild $(echo $1|tr -d 'a') ;;
+    b* ) buildZber $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+	  partialBuild $(echo $1|tr -d 'b') ;;
+    c* ) buildIAM  $PR_BUILD $TST_BUILD| tee partialBuildLog.log; 
+	  partialBuild $(echo $1|tr -d 'c') ;;
+    d* ) buildTaskapp $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+	  partialBuild $(echo $1|tr -d 'd') ;;
+    e* ) buildLogapp $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+	  partialBuild $(echo $1|tr -d 'e') ;;
+    f* ) buildScriptLang $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+	  partialBuild $(echo $1|tr -d 'f') ;;
+    g* ) buildWebServices $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+	  partialBuild $(echo $1|tr -d 'g') ;;
+    h* ) buildZBD $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+	  partialBuild $(echo $1|tr -d 'h') ;;
+    i* ) buildRegis $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+	  partialBuild $(echo $1|tr -d 'i') ;;
+    j* ) buildKRAZ $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+	  partialBuild $(echo $1|tr -d 'j') ;;
+    k* ) buildIntrastat $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+	  partialBuild $(echo $1|tr -d 'k') ;;
+    y* ) buildISISCommons $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+	  partialBuild $(echo $1|tr -d 'y') ;;
+    z* ) buildCommons $PR_BUILD $TST_BUILD | tee partialBuildLog.logs; 
+	  partialBuild $(echo $1|tr -d 'z') ;;
+    0) clear; welcome ;;
+    00) clear; exit ;;
+    "")  ;;
+    *) clear; echo "Chybne zadany vstup"; sleep 1; chooseBuild ;;
+  esac
+}
+
+build(){
+  if [ "$PROFILE_BUILD" == "1" ]
+  then
+    PR_BUILD="-Pbuild"
+  else
+    PR_BUILD=""
+  fi
+  
+  if [ "$SKIP_TESTS" == "1" ]
+  then
+    TST_BUILD="-DskipTests=true"
+  else
+    TST_BUILD=""
+  fi
+  
+  if [ $1 = "ALL" ]
+  then
+    buildIntrastat  $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    cleanPartialBuildLog;
+    buildCommons  $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    cleanPartialBuildLog;
+    buildISISCommons $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    cleanPartialBuildLog;
+    buildLogapp $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    cleanPartialBuildLog;
+    buildTaskapp $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    cleanPartialBuildLog;
+    buildIAM $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    cleanPartialBuildLog;
+    buildPDB $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    cleanPartialBuildLog;
+    buildMETIS $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    cleanPartialBuildLog;
+    buildZBD $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    cleanPartialBuildLog;
+    buildScriptLang $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    cleanPartialBuildLog;
+    buildZber $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    cleanPartialBuildLog;
+    buildWebServices $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    cleanPartialBuildLog;
+    buildKRAZ $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    cleanPartialBuildLog;
+    buildRegis $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    cleanPartialBuildLog;
+  else
+    partialBuild $1 $PR_BUILD $TST_BUILD 
+  fi
+  
+  cd $LOCAL_DIR
+}
+
+chooseBuild() {
+  echo "a. Metis 	 	b. ZBER 	"
+  echo "c. IAM 			d. TASKAPP	"
+  echo "e. LogApp 		f. ScriptLang "
+  echo "g. WebServices  	h. ZBD"
+  echo "i. Regis 		j. KRAZ "
+  echo "k. Intrastat		"
+  
+  echo "y. ISISCommon		z. COMMONS"
+  echo "								0. back"
+  echo "							       00. exit"
+  echo -n "Vyber moznost(i): "
+  read buildOption;
+
+  build $buildOption ;
+  if grep -q FAILURE "$BUILD_LOG" 
+  then
+       echo -e "$RED Build zlyhal!! $NC"
+  fi
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read 
+}

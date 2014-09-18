@@ -1,0 +1,245 @@
+#!/bin/bash
+
+export MAVEN_OPTS="-Xmx2048m -XX:MaxPermSize=1024m -XX:+CMSClassUnloadingEnabled"
+export JAVA_HOME="/usr/lib/jvm/jdk1.6.0_35" 					# Cesta k ulozenej jave
+export MAVEN_HOME="$HOME/netbeans-8.0/java/maven" 				# Cesta k mavenu
+
+PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$PATH 					# Doplnenie PATH o horne dve cesty
+
+SVN="/home/andreus/svn" 							# Domovsky adresar pre svn
+BIN="/opt/IBM/WebSphere/AppServer/profiles/$PROFILE/bin/" 			# Cesta do aplikacneho serveru na virtualke
+VIRTUAL_WAS="/opt/IBM/WebSphere/AppServer" 					# Cesta do home-u was servera
+VIRTUAL_PORTAL="/opt/IBM/WebSphere/PortalServer" 				# Cesta do home-u portal servera
+ISIS_DEVEL="$SVN/Isis.devel/trunk"						# SVN cesta pre ISIS
+COMMON_DEVEL="$SVN/Common.devel/trunk"						# SVN cesta pre Common
+EAR_REMOTE_DIR="/tmp/"								# Temporary cesta na upload EAR
+DEPLOY_LOG="/home/andreus/deploy.log"						# Cesta pre ulozenie deploy Logu
+BUILD_LOG="/home/andreus/build.log"						# Cesta pre ulozenie build Logu
+ACTUAL_VERSION="1.19.0"								# Aktualna verzia
+SCRIPT_REL_PATH="/root/scripts/"						# Adresar so skriptamy na deploy war
+WPS_ADMIN_URL="http://$HOST_PORTAL:10039/wps/config"				# URL pre deploy WARka
+PROFILE_BUILD="0"								# Nastavenie buildenia cez profil
+SKIP_TESTS="1"									# Povolit skip testov pri buildeni
+LOCAL_EJB_URL="mc-was8:9813:cell/nodes/mc-was8Node01/servers/ISIS01-01/"	# String na nahradenie pri porovnavanie EJB
+
+#Nic dolezite
+RED='\e[1;31m'
+BLUE='\e[1;34m'
+NC='\e[0m'
+
+#-----------------------------------------------------------------------
+#------------------------------Profiles---------------------------------
+#-----------------------------------------------------------------------
+
+NUMBER_OF_PROFILES="1"								# Pocet profilov ktore sa maju zahrnut
+ACTUAL_PROFILE="DEFAULT"							# Defaultne zapnuty profil
+
+#Prazdny profil do ktoreho si program nacita udaje.. NEMENIT HODNOTY!! (aj tak by to nic nespravilo)
+#PROFILE_NUMBER_NAME="NameOfProfile"
+HOST=""
+HOST_PORTAL=""
+HOST_USER=""
+PROFILE=""
+CELL=""
+NODE=""
+SERVER=""
+USER=""
+PASS=""
+PORTAL_USER=""
+PORTAL_PASS=""
+CLUSTER=""
+CELL_PORTAL=""
+REMOTE_EJB_URL_PORTAL=""
+REMOTE_EJB_URL_WAS=""
+
+#Defaultny
+PROFILE_1_NAME="DEFAULT"										# Meno profilu
+HOSTDEFAULT="wasdevel.microcomp.sk"									# Host na was 
+HOST_PORTALDEFAULT="portdevel.microcomp.sk"								# Host na port
+HOST_USERDEFAULT="root"											# Uzivatel na was zelezo (ssh - nie was server)
+PROFILEDEFAULT="Custom01"										# Nazov profilu na was
+CELLDEFAULT="wasdevelCell01"										# Nazov Cell na was
+NODEDEFAULT="wasdevelNode01"										# Nazov Node na was
+SERVERDEFAULT="wasdevelServer01"									# Nazov Server na was
+USERDEFAULT="was"											# User na was
+PASSDEFAULT="was"											# Heslo na was
+PORTAL_USERDEFAULT="was"										# User na portal
+PORTAL_PASSDEFAULT="was"										# Heslo na portal
+CLUSTERDEFAULT=""											# Ak je cluster tak nazov
+CELL_PORTALDEFAULT="portdevel"										# Nazov Cell na portal
+REMOTE_EJB_URL_PORTALDEFAULT="wasdevel:9813:cell/nodes/wasdevelNode01/servers/wasdevelServer01/"	# EJB String pre porovnanie na portal
+REMOTE_EJB_URL_WASDEFAULT="wasdevel:9813:cell/nodes/wasdevelNode01/servers/wasdevelServer01/"		# EJB String pre porovnanie na was
+
+
+BRANCH_BUILD="1"							# Povolit build z branchu/tagu/trunku
+
+#Buildenie z Branchu
+LAST_VERSION_NUMBER="3"							# Minoritna verzia
+BRANCH_VERSION="1.17"							# Majoritna  verzia
+ISIS_DEVEL_BRANCH="$SVN/Isis.devel/branches/$BRANCH_VERSION.x"		# Cesta k ISIS branch v SVN
+COMMON_DEVEL_BRANCH="$SVN/Common.devel/branches/$BRANCH_VERSION.x"	# Cesta k Common branch v SVN
+BRANCH_SFX=""								# neMetis branch suffix
+
+
+#Buildenie z Tag
+LAST_TAG_VERSION_NUMBER="1"							# Minoritna verzia
+TAG_VERSION="1.14"								# Majoritna verzia
+ISIS_DEVEL_TAG="$SVN/Isis.devel/tags/$TAG_VERSION.$LAST_TAG_VERSION_NUMBER"	# Cesta k ISIS branch v SVN
+COMMON_DEVEL_TAG="$SVN/Common.devel/tags/$TAG_VERSION.$LAST_TAG_VERSION_NUMBER"	# Cesta k Common branch v SVN
+
+setUpDeployParameters(){
+#LOG APP
+LGALE="LogApp$BRANCH_SFX/Ear/target/LogAppEar.ear"
+LGAE="LogAppEar.ear"
+LGA="LogAppEar"
+LGAM1="LogApp Core Service"
+LGAM1B="LogAppDaoImplProject-$SETUP_VERSION.jar"
+LGAM2="LogApp Bussiness Service"
+LGAM2B="LogAppBussinessImplProject-$SETUP_VERSION.jar"
+
+#TASK APP
+TAPLE="TaskApp$BRANCH_SFX/Ear/target/TaskApp.ear"
+TAPE="TaskAppEar.ear"
+TAP="TaskAppEar"
+TAPM1="Task App Domain Service"
+TAPM1B="TaskAppCoreDaoImpl-$SETUP_VERSION.jar"
+TAPM2="Task App Bussiness Service"
+TAPM2B="TaskAppBusinessServiceImpl-$SETUP_VERSION.jar"
+
+#IAM
+IAMLE="Iam$BRANCH_SFX/Ear/target/IamEar.ear"
+IAME="IamEar.ear"
+IAM="IamEar"
+IAMM1="IamCoreDaoImplProject-$SETUP_VERSION.jar"
+IAMM1B="IamCoreDaoImplProject-$SETUP_VERSION.jar"
+IAMM2="IamBusinessServiceImplProject-$SETUP_VERSION.jar"
+IAMM2B="IamBusinessServiceImplProject-$SETUP_VERSION.jar"
+
+#METIS
+METLE="Metis$BRANCH_SFX/Ear/target/MetisEar.ear"
+METE="MetisEar.ear"
+MET="MetisEar"
+METM1="Metis Domain Service"
+METM1B="MetisCoreDaoImplProject-$SETUP_VERSION.jar"
+METM2="Metis Bussiness Service"
+METM2B="MetisBusinessServiceImplProject-$SETUP_VERSION.jar"
+METISWAR="MetisGuiProject-$SETUP_VERSION.war"
+
+#ZBER
+ZBELE="Zber$BRANCH_SFX/Ear/target/ZberEar.ear"
+ZBEE="ZberEar.ear"
+ZBE="ZberEar"
+ZBEM1="Zber Domain Service"
+ZBEM1B="ZberCoreDaoImplProject-$SETUP_VERSION.jar"
+ZBEM2="Zber Business Service"
+ZBEM2B="ZberBusinessServiceImplProject-$SETUP_VERSION.jar"
+
+#ZBD
+ZBDLE="ZBD$BRANCH_SFX/Ear/target/ZBDEar.ear"
+ZBDE="ZBDEar.ear"
+ZBD="ZBDEar"
+ZBDM1="ZBD Domain Service"
+ZBDM1B="ZBDCoreDaoImplProject-$SETUP_VERSION.jar"
+ZBDM2="ZBDBusinessServiceImplProject-$SETUP_VERSION.jar"
+ZBDM2B="ZBDBusinessServiceImplProject-$SETUP_VERSION.jar"
+
+#SCRIPT LANG
+SCLLE="ScriptLang$BRANCH_SFX/Ear/target/ScriptLangEar.ear"
+SCLE="ScriptLangEar.ear"
+SCL="ScriptLangEar"
+SCLM1="ScriptLangBusinessServiceImplProject-$SETUP_VERSION.jar"
+SCLM1B="ScriptLangBusinessServiceImplProject-$SETUP_VERSION.jar"
+
+#DISEMINATION WS
+DISLE="WebServices$BRANCH_SFX/DiseminationWebServices/DiseminationWebServicesEar/target/DisWsEar.ear"
+DISE="DisWsEar.ear"
+DIS="DiseminationWebServicesEar"
+DISM1="DiseminationWebServicesImplProject-$SETUP_VERSION.war"
+DISM1B="DiseminationWebServicesImplProject-$SETUP_VERSION.war"
+
+#REGIS WS
+RGSLE="WebServices$BRANCH_SFX/RegisWebServices/RegisWebServicesEar/target/RegWsEar.ear"
+RGSE="RegWsEar.ear"
+RGS="RegisWebServicesEar"
+RGSM1="Regis Webservices"
+RGSM1B="RegisWebServicesImplProject-$SETUP_VERSION.war"
+
+#STATISTICAL WS
+STSLE="WebServices$BRANCH_SFX/StatisticalWebServices/StatisticalWebServicesEar/target/StatWsEar.ear"
+STSE="StatWsEar.ear"
+STS="StatisticalWebServicesEar"
+STSM1="Statistical Webservices"
+STSM1B="StatisticalWebServicesImplProject-$SETUP_VERSION.war"
+
+#IAM WS
+IAWLE="WebServices$BRANCH_SFX/IamWebServices/Ear/target/IamWsEar.ear"
+IAWE="IamWsEar.ear"
+IAW="IamWebServicesEar"
+IAWM1="IamWebServicesImplProject-$SETUP_VERSION.jar"
+IAWM1B="IamWebServicesImplProject-$SETUP_VERSION.jar"
+IAWM2="Iam WebServices"
+IAWM2B="IamWebServicesWebProject-$SETUP_VERSION.war"
+
+#TASK WEBSERVICE
+TMW="TaskManagementWebServicesEar"
+TMWE="TmWsEar.ear"
+TMWLE="WebServices$BRANCH_SFX/TaskManagementWebServices/TaskManagementWebServicesEar/target/TmWsEar.ear"
+TMWR1="Task Management Web Services"
+TMW1B="TaskManagementWebServicesImplProject-$SETUP_VERSION.war"
+
+#KRAZ
+KRAZ1="Kraz2$BRANCH_SFX/Ear/target/Kraz.ear"
+KRAZ2="Kraz.ear"
+KRAZ3="Kraz"
+KRAZ4="KrazCoreDaoImpl-$SETUP_VERSION.jar"
+KRAZ5="KrazCoreDaoImpl-$SETUP_VERSION.jar"
+KRAZ6="KrazBusinessServiceImpl-$SETUP_VERSION.jar"
+KRAZ7="KrazBusinessServiceImpl-$SETUP_VERSION.jar"
+KRAZ8="Kraz Webservices"
+KRAZ9="KrazWS-$SETUP_VERSION.war"
+KRAZ10="Kraz Gui"
+KRAZ11="KrazGui-$SETUP_VERSION.war"
+
+
+#KRAZ_MOCK
+KRAZ_MOCK_1="Kraz2$BRANCH_SFX/Ear-mock/target/Kraz.ear"
+KRAZ_MOCK_2="Kraz.ear"
+KRAZ_MOCK_3="Kraz"
+KRAZ_MOCK_4="KrazBusinessServiceImpl-mock-$SETUP_VERSION.jar"
+KRAZ_MOCK_5="KrazBusinessServiceImpl-mock-$SETUP_VERSION.jar"
+KRAZ_MOCK_6="Kraz Gui"
+KRAZ_MOCK_7="KrazGui-$SETUP_VERSION.war"
+
+#INTRASTAT
+INTR1="Intrastat$BRANCH_SFX/Ear/target/Intrastat.ear"
+INTR2="Intrastat.ear"
+INTR3="Intrastat"
+INTR4="IntrastatCoreDaoImpl-$SETUP_VERSION.jar"
+INTR5="IntrastatCoreDaoImpl-$SETUP_VERSION.jar"
+INTR6="IntrastatBusinessServiceImpl-$SETUP_VERSION.jar"
+INTR7="IntrastatBusinessServiceImpl-$SETUP_VERSION.jar"
+INTR8="Intrastat Gui"
+INTR9="IntrastatGui-$SETUP_VERSION.war"
+
+#INTRASTAT_MOCK
+INTR_MOCK_1="Intrastat$BRANCH_SFX/Ear-mock/target/Intrastat.ear"
+INTR_MOCK_2="Intrastat.ear"
+INTR_MOCK_3="Intrastat"
+INTR_MOCK_4="IntrastatBusinessServiceImpl-mock-$SETUP_VERSION.jar"
+INTR_MOCK_5="IntrastatBusinessServiceImpl-mock-$SETUP_VERSION.jar"
+INTR_MOCK_6="Intrastat Gui"
+INTR_MOCK_7="IntrastatGui-$SETUP_VERSION.war"
+
+#Regis
+REGIS1="Regis2$BRANCH_SFX/Ear/target/Regis.ear"
+REGIS2="Regis.ear"
+REGIS3="Regis"
+REGIS4="Regis Domain Service"
+REGIS5="RegisCoreDaoImplProject-$SETUP_VERSION.jar"
+REGIS6="Regis Bussiness Service"
+REGIS7="RegisBusinessServiceImplProject-$SETUP_VERSION.jar"
+REGIS8="Regis Webservices"
+REGIS9="RegisWSProject-$SETUP_VERSION.war"
+REGIS10="Regis Gui"
+REGIS11="RegisGuiProject-$SETUP_VERSION.war"
+}

@@ -1,0 +1,114 @@
+
+function welcome {
+  clear;
+  case "$BRANCH_BUILD" in
+    1) echo -e "Build (b):$RED Trunk$NC" ;;
+    2) echo -e "Build (b):$RED Branch$NC" ;;
+    3) echo -e "Build (b):$RED Tag$NC" ;;
+  esac
+  
+  echo -e "Aktualny profil (p):$RED $ACTUAL_PROFILE $NC"
+  echo -e "Nastavena verzia na :$RED $SETUP_VERSION $NC"
+  if [ "$(checkIfNewVersionAvailable)" == "1" ]
+  then
+    echo -e "$BLINK Nova verzia k dispozicii (n) $NE"
+  fi
+  echo ""
+  echo ""
+  echo "    ________  __  ___   _       __     __   _____       __                 "
+  echo "   /  _/ __ )/  |/  /  | |     / /__  / /_ / ___/____  / /_  ___  ________ "
+  echo '   / // __  / /|_/ /   | | /| / / _ \/ __ \\__ \/ __ \/ __ \/ _ \/ ___/ _ \'
+  echo " _/ // /_/ / /  / /    | |/ |/ /  __/ /_/ /__/ / /_/ / / / /  __/ /  /  __/"
+  echo "/___/_____/_/  /_/     |__/|__/\___/_.___/____/ .___/_/ /_/\___/_/   \___/ "
+  echo "                                             /_/                           "
+  echo ""
+  
+  echo
+  echo
+  echo "1. Deploy vsetkeho 				2. Build vsetkeho -- 22. Build pom"
+  echo "3. Ciastocny deploy -- 33. Build->Deploy	4. Ciastocny build	"
+  echo "5. SVN Update -- 55. Branch			6. Odoslanie novych verzii JAR"
+  echo "7. Konfiguracia					8. Ovladanie masin"
+  echo ""
+  echo "9. Build.log 		       			10. Deploy.log"
+  echo "								00. exit"
+  echo -n "Vyber moznost: "
+  read option;
+  clear;
+  case "$option" in 
+    1) deploy "ALL" | tee $DEPLOY_LOG ;;
+    2) rm $BUILD_LOG
+       build "ALL" 
+       if grep -q FAILURE "$BUILD_LOG" 
+       then
+       echo -e "$RED Build zlyhal!! $NC"
+       echo
+       fi
+       echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+       read
+       ;;
+    3) chooseDeploy | tee $DEPLOY_LOG ;;
+    4) rm $BUILD_LOG
+       chooseBuild ;;
+    5) svnUpdate;;
+    6) sendJars;;
+    7) configureMenu ;;
+    8) chooseControl ;;
+    9) showBuildLog ;;
+    10)showDeployLog;;
+    22)	rm $BUILD_LOG
+	pomBuild
+	if grep -q FAILURE "$BUILD_LOG" 
+       then
+       echo -e "$RED Build zlyhal!! $NC"
+       echo
+       fi
+       echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+       read
+       ;;
+    55) svnBranchUpdate ;;
+    33) buildAndDeploy ;;
+    p) chooseProfile;;
+    b) chooseBuildPath ;;
+    w) w
+       echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+       read
+       ;;
+    n) whatsInNewVersion ;;
+    #EASTER_EGGS
+    nyan) nyanCat;;
+    0) clear; exit ;;
+    00) clear; exit ;;
+    *) clear; echo "Chybne zadany vstup"; sleep 1; welcome ;;
+  esac
+  welcome
+}
+
+mainFunction(){
+  
+  LOCAL_DIR=$( dirname $(readlink -f "$0"))
+  cd $LOCAL_DIR
+  clear;
+  
+  setProfileVariables
+  
+  case "$BRANCH_BUILD" in
+  1) SETUP_VERSION="$ACTUAL_VERSION"
+     SETUP_TYPE="Trunk"
+     ;;
+  2) ISIS_DEVEL="$ISIS_DEVEL_BRANCH"
+     COMMON_DEVEL="$COMMON_DEVEL_BRANCH"
+     SETUP_VERSION="$BRANCH_VERSION.$LAST_VERSION_NUMBER"
+     SETUP_TYPE="Branch"
+     ;;
+  3) ISIS_DEVEL="$ISIS_DEVEL_TAG"
+     COMMON_DEVEL="$COMMON_DEVEL_TAG"
+     SETUP_VERSION="$TAG_VERSION.$LAST_TAG_VERSION_NUMBER"
+     SETUP_TYPE="Tag"
+     ;;
+  esac
+  
+  setUpDeployParameters
+  welcome
+}
+mainFunction

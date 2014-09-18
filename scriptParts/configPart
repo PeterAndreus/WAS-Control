@@ -1,0 +1,384 @@
+
+#SELF UPDATE POINTER nemazat!!!!
+
+#Dodatocne nekonfigurovatelne globalne premenne
+ESC_SEQ="\E["
+GREEN=$ESC_SEQ"32;01m"
+YELLOW=$ESC_SEQ"33;01m"
+MAGENTA=$ESC_SEQ"35;01m"
+CYAN=$ESC_SEQ"36;01m"
+WHITE=$ESC_SEQ"37;01m"
+NE="\033[0m"
+BOLD="\033[1m"
+BLINK="\033[5m"
+REVERSE="\033[7m"
+UNDERLINE="\033[4m"
+ACTUAL_SCRIPT_VERSION="2.5"
+
+setProfileVariables(){
+  eval tmp='HOST'$ACTUAL_PROFILE
+  eval tmp2=\$${tmp}
+  eval HOST=$tmp2
+  
+  eval tmp='HOST_PORTAL'$ACTUAL_PROFILE
+  eval tmp2=\$${tmp}
+  eval HOST_PORTAL=$tmp2
+  
+  eval tmp='HOST_USER'$ACTUAL_PROFILE
+  eval tmp2=\$${tmp}
+  eval HOST_USER=$tmp2
+  
+  eval tmp='PROFILE'$ACTUAL_PROFILE
+  eval tmp2=\$${tmp}
+  eval PROFILE=$tmp2
+  
+  eval tmp='CELL'$ACTUAL_PROFILE
+  eval tmp2=\$${tmp}
+  eval CELL=$tmp2
+  
+  eval tmp='NODE'$ACTUAL_PROFILE
+  eval tmp2=\$${tmp}
+  eval NODE=$tmp2
+  
+  eval tmp='SERVER'$ACTUAL_PROFILE
+  eval tmp2=\$${tmp}
+  eval SERVER=$tmp2
+  
+  eval tmp='USER'$ACTUAL_PROFILE
+  eval tmp2=\$${tmp}
+  eval USER=$tmp2
+  
+  eval tmp='PASS'$ACTUAL_PROFILE
+  eval tmp2=\$${tmp}
+  eval PASS=$tmp2
+  
+  eval tmp='PORTAL_USER'$ACTUAL_PROFILE
+  eval tmp2=\$${tmp}
+  eval PORTAL_USER=$tmp2
+  
+  eval tmp='PORTAL_PASS'$ACTUAL_PROFILE
+  eval tmp2=\$${tmp}
+  eval PORTAL_PASS=$tmp2
+  
+  
+  eval tmp='CLUSTER'$ACTUAL_PROFILE
+  eval tmp2=\$${tmp}
+  eval CLUSTER=$tmp2
+  
+  eval tmp='CELL_PORTAL'$ACTUAL_PROFILE
+  eval tmp2=\$${tmp}
+  eval CELL_PORTAL=$tmp2
+    
+  eval tmp='REMOTE_EJB_URL_PORTAL'$ACTUAL_PROFILE
+  eval tmp2=\$${tmp}
+  eval REMOTE_EJB_URL_PORTAL=$tmp2
+  
+  eval tmp='REMOTE_EJB_URL_WAS'$ACTUAL_PROFILE
+  eval tmp2=\$${tmp}
+  eval REMOTE_EJB_URL_WAS=$tmp2
+  
+  eval BIN="/opt/IBM/WebSphere/AppServer/profiles/$PROFILE/bin/"
+  eval WPS_ADMIN_URL="http://$HOST_PORTAL:10039/wps/config"
+}
+
+printout(){
+  echo -e "$BLUE Aktualne hodnoty profilu: $NC"
+  echo "HOST: $HOST"
+  echo "HOST_PORTAL: $HOST_PORTAL"
+  echo "HOST_USER: $HOST_USER"
+  echo "PROFILE: $PROFILE"
+  echo "CELL: $CELL"
+  echo "NODE: $NODE"
+  echo "SERVER: $SERVER"
+  echo "USER: $USER"
+  echo "PASS: $PASS"
+  echo "PORTAL_USER: $PORTAL_USER"
+  echo "PORTAL_PASS: $PORTAL_PASS"
+  echo "CLUSTER: $CLUSTER"
+  echo "CELL_PORTAL: $CELL_PORTAL"
+  echo "REMOTE_EJB_URL_PORTAL: $REMOTE_EJB_URL_PORTAL"
+  echo "REMOTE_EJB_URL_WAS: $REMOTE_EJB_URL_WAS"
+}
+
+chooseProfile(){
+  cd $LOCAL_DIR
+  printout
+  echo ""
+  echo ""
+  for i in $(eval echo {1..$NUMBER_OF_PROFILES})
+  do
+   eval tmp='PROFILE_'$i'_NAME'
+   eval tmp2=\$${tmp}
+   echo "$i: $tmp2"
+  done
+  
+  echo "Vyberte profil ktory chcete pouzivat: "
+  read chosenProfile;
+  eval tmp='PROFILE_'$chosenProfile'_NAME'
+  eval tmp2=\$${tmp}
+  if [ ! $chosenProfile = "" ]
+  then
+    sed -i '0,/ACTUAL_PROFILE=".*"/{s,ACTUAL_PROFILE=".*",ACTUAL_PROFILE="'${tmp2}'",}' $0
+  fi
+  cd $LOCAL_DIR
+  bash $(basename $0)
+  
+  exit
+}
+
+chooseBuildPath(){
+  cd $LOCAL_DIR
+  clear
+  echo "WasControl zacne pouzivat: "
+  echo "1. Trunk"
+  echo "2. Branch"
+  echo "3. Tag"
+  echo
+  echo "default: $BRANCH_BUILD"
+  echo
+  echo -n "vasa hodnota (nechaj prazdne pre default): "
+  read userInput
+  if [ ! $userInput = "" ]
+  then
+    sed -i '0,/BRANCH_BUILD=".*"/{s,BRANCH_BUILD=".*",BRANCH_BUILD="'${userInput}'",}' $0
+  fi
+  
+  clear
+  case "$userInput" in
+  2)
+    echo "Nastavenie pozadovanej verzie aplikacii v branch (nie Metis)"
+    echo "default: $BRANCH_VERSION"
+    echo
+    echo "VYNECHAJ POSLEDNU CISLICU VERZIE!!"
+    echo -n "vasa hodnota (nechaj prazdne pre default): "
+    read userActualVersion
+    echo $userActualVersion
+    if [ ! $userActualVersion = "" ]
+    then
+      sed -i '0,/BRANCH_VERSION=".*"/{s,BRANCH_VERSION=".*",BRANCH_VERSION="'$userActualVersion'",}' $0
+    fi
+    clear
+    echo "Nastavenie minoritnej verzie CELEHO branchu"
+    echo "default: $LAST_VERSION_NUMBER"
+    echo
+    echo -n "vasa hodnota (nechaj prazdne pre default): "
+    read userActualLastVersionNumber
+    echo $userActualLastVersionNumber
+    if [ ! $userActualLastVersionNumber = "" ]
+    then
+      sed -i '0,/LAST_VERSION_NUMBER=".*"/{s,LAST_VERSION_NUMBER=".*",LAST_VERSION_NUMBER="'$userActualLastVersionNumber'",}' $0
+    fi
+     
+    clear;
+    echo "Verzie su nastavene na :" 
+    echo "$(cat $(basename $0) | grep -x BRANCH_VERSION=".*")"
+    echo "$(cat $(basename $0) | grep -x LAST_VERSION_NUMBER=".*")"
+    echo
+    echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+    read
+    ;;
+  1)
+    sed -i '0,/BRANCH_SFX=".*"/{s,BRANCH_SFX=".*",BRANCH_SFX="''",}' $0
+    ;;
+  3)
+    echo "Nastavenie pozadovanej verzie aplikacii v tag (nie Metis)"
+    echo "default: $TAG_VERSION"
+    echo
+    echo "VYNECHAJ POSLEDNU CISLICU VERZIE!!"
+    echo -n "vasa hodnota (nechaj prazdne pre default): "
+    read userActualTagVersion
+    echo $userActualTagVersion
+    if [ ! $userActualTagVersion = "" ]
+    then
+      sed -i '0,/TAG_VERSION=".*"/{s,TAG_VERSION=".*",TAG_VERSION="'$userActualTagVersion'",}' $0
+    fi
+    clear
+    echo "Nastavenie minoritnej verzie CELEHO tagu"
+    echo "default: $LAST_TAG_VERSION_NUMBER"
+    echo
+    echo -n "vasa hodnota (nechaj prazdne pre default): "
+    read userActualLastTagVersionNumber
+    echo $userActualLastTagVersionNumber
+    if [ ! $userActualLastTagVersionNumber = "" ]
+    then
+      sed -i '0,/LAST_TAG_VERSION_NUMBER=".*"/{s,LAST_TAG_VERSION_NUMBER=".*",LAST_TAG_VERSION_NUMBER="'$userActualLastTagVersionNumber'",}' $0
+    fi
+     
+    clear;
+    echo "Verzie su nastavene na :" 
+    echo "$(cat $(basename $0) | grep -x TAG_VERSION=".*")"
+    echo "$(cat $(basename $0) | grep -x LAST_TAG_VERSION_NUMBER=".*")"
+    echo
+    echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+    read
+    ;;
+  esac
+  
+  cd $LOCAL_DIR
+  bash $(basename $0)
+  
+  exit
+}
+
+upload() {
+ scp $1 $HOST_USER@$HOST:$2
+}
+
+
+touchMeGently(){
+  find $1 -name '*.jsp' -exec touch '{}' \;
+}
+
+nyanCat(){
+telnet miku.acm.uiuc.edu
+}
+
+checkForFiles(){
+clear
+  
+  if [ -d $ISIS_DEVEL ]
+  then
+    echo -e  "$ISIS_DEVEL $BLUE uspesne najdene$NC"
+  else
+    echo -e "$ISIS_DEVEL ${RED}NENAJDENE$NC"
+  fi
+   if [ -d $COMMON_DEVEL ]
+  then
+    echo -e  "$COMMON_DEVEL $BLUE uspesne najdene$NC"
+  else
+    echo -e "$COMMON_DEVEL ${RED}NENAJDENE$NC"
+  fi
+  if [ -d $LOCAL_DIR ]
+  then
+    echo  -e "$LOCAL_DIR $BLUE uspesne najdene$NC"
+  else
+    echo -e "$LOCAL_DIR ${RED}NENAJDENE$NC"
+  fi
+  if [ "$( ping -q -c1 $HOST)" ]
+  then 
+    echo -e "$HOST $BLUE uspesne naviazany$NC"
+  else
+    echo -e "$HOST ${RED} NEUSPESNE NAVIAZANY$NC"
+  fi
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+read tmp
+}
+
+setPaths(){
+  cd $LOCAL_DIR
+  clear
+  echo "Nastavenie cesty 'BIN'"
+  echo "default: $BIN"
+  echo
+  echo -n "vasa hodnota (nechaj prazdne pre default): "
+  read userInput
+  if [ ! $userInput = "" ]
+  then
+    sed -i '0,/BIN=".*"/{s,BIN=".*",BIN="'${userInput}'",}' $0
+  fi
+  clear
+  echo "Nastavenie cesty 'SVN'"
+  echo "default: $SVN"
+  echo
+  echo -n "vasa hodnota (nechaj prazdne pre default): "
+  read userInputSVN
+  echo $userInputSVN
+  if [ ! $userInputSVN = "" ]
+  then
+    sed -i '0,/SVN=".*"/{s,SVN=".*",SVN="'${userInputSVN}'",}' $0
+  fi
+  clear
+  echo "Nastavenie cesty 'build.log'"
+  echo "default: $BUILD_LOG"
+  echo
+  echo -n "vasa hodnota (nechaj prazdne pre default): "
+  read userInputBuildLog
+  echo $userInputBuildLog
+  if [ ! $userInputBuildLog = "" ]
+  then
+    sed -i '0,/BUILD_LOG=".*"/{s,BUILD_LOG=".*",BUILD_LOG="'$userInputBuildLog'",}' $0
+  fi
+  clear
+  echo "Nastavenie cesty 'deploy.log'"
+  echo "default: $DEPLOY_LOG"
+  echo
+  echo -n "vasa hodnota (nechaj prazdne pre default): "
+  read userInputDeployLog
+  echo $userInputDeployLog
+  if [ ! $userInputDeployLog = "" ]
+  then
+    sed -i '0,/DEPLOY_LOG=".*"/{s,DEPLOY_LOG=".*",DEPLOY_LOG="'$userInputDeployLog'",}' $0
+  fi
+  
+  clear;
+  echo "Cesty su nastavene na :" 
+  echo "$(cat $(basename $0) | grep -x BIN=".*")"
+  echo "$(cat $(basename $0) | grep -x SVN=".*")"
+  echo "$(cat $(basename $0) | grep -x BUILD_LOG=".*")"
+  echo "$(cat $(basename $0) | grep -x DEPLOY_LOG=".*")"
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+  cd $LOCAL_DIR
+  bash $(basename $0)
+  
+  exit
+}
+
+setVersions(){
+  cd $LOCAL_DIR
+  clear
+  echo "Nastavenie aktualnej verzie aplikacii (nie Metis)"
+  echo "default: $ACTUAL_VERSION"
+  echo
+  echo -n "vasa hodnota (nechaj prazdne pre default): "
+  read userActualVersion
+  echo $userActualVersion
+  if [ ! $userActualVersion = "" ]
+  then
+    sed -i '0,/ACTUAL_VERSION=".*"/{s,ACTUAL_VERSION=".*",ACTUAL_VERSION="'$userActualVersion'",}' $0
+  fi
+  clear;
+  echo "Verzie su nastavene na :" 
+  echo "$(cat $(basename $0) | grep -x ACTUAL_VERSION=".*")"
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+  cd $LOCAL_DIR
+  bash $(basename $0)
+  
+  exit
+}
+
+
+configureMenu(){
+  echo "1. Otestuj default hodnoty 		2. Nastav cesty 	"
+  echo "3. Premaz build.log			4. Premaz deploy.log	"
+  echo "5. Nastav aktualne verzie		6. Nastav deploy skripty"
+  echo "7. Automaticky update scriptu		8. Nastav build nastavenia"
+  echo "9. Konfiguracia EJB"
+  echo ""
+  echo "w. What's new				a. About"
+  echo "								0. back"
+  echo "							       00. exit"
+  echo -n "Vyber moznost: "
+  read configureOption;
+
+  case $configureOption in 
+    1)  checkForFiles ;;
+    2)  setPaths ;;
+    3)  echo "" > $BUILD_LOG;;
+    4)  echo "" > $DEPLOY_LOG;;
+    5)  setVersions;;
+    6) 	setDeployScript ;;
+    7)  selfUpdate ;;
+    8) setBuildOptions ;;
+    9) ejbMenu ;;
+    w) whatIsNew ;;
+    a) about ;;
+    0) clear; welcome ;;
+    00) clear; exit ;;
+    *) clear; echo "Chybne zadany vstup"; sleep 1; configureMenu ;;
+  esac
+}

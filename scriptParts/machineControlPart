@@ -1,0 +1,50 @@
+
+restartMachine(){
+  ssh $HOST_USER@$1 "/root/bin/was-control.sh restart" 
+}
+startMachine(){
+  ssh $HOST_USER@$1 "/root/bin/was-control.sh start"
+}
+stopMachine(){
+  ssh $HOST_USER@$1 "/root/bin/was-control.sh stop"
+}
+machineControl(){
+  case $1 in
+    *1* ) startMachine $HOST; machineControl $(echo $1|tr -d '1') ;;
+    *2* ) startMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '2') ;;
+    *3* ) stopMachine $HOST; machineControl $(echo $1|tr -d '3') ;;
+    *4* ) stopMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '4') ;;
+    *5* ) restartMachine $HOST; machineControl $(echo $1|tr -d '5') ;;
+    *6* ) restartMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '6') ;;
+    *7* ) startMachine $HOST;
+	  startMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '7') ;;
+    *8* ) stopMachine $HOST;
+	  stopMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '8') ;;
+    *9* ) restartMachine $HOST;
+	  restartMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '9') ;;
+    0) clear; welcome ;;
+    00) clear; exit ;;
+    "")  ;;
+    *) clear; echo "Chybne zadany vstup"; sleep 1; chooseControl ;;
+  esac
+}
+
+
+chooseControl() {
+  echo "1. Start Devel server(was) 		2. Start Portal server	"
+  echo "3. Vypnut Devel server			4. Vypnut Portal server	"
+  echo "5. Restart Devel server			6. Restart Portal server"
+  echo ""
+  echo "7. Start oboch serverov			8. Vypnut oba servery"
+  echo "9. Restart oboch serverov"
+  echo "								0. back"
+  echo "							       00. exit"
+  echo -n "Vyber moznost(i): "
+  read controlOption;
+
+  machineControl $controlOption 
+  
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+}

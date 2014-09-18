@@ -1,0 +1,112 @@
+
+whatIsNew(){
+clear  
+  echo -e $UNDERLINE"Verzia:2.5 $NE"
+  echo ""
+  echo ""  
+  
+  echo -e "$RED 22.08.2014: $NC"
+  echo "----------------------------------------------------------------------------"
+  echo "* Version 2.2"
+  echo "* Upraveny deploy KRAZ potrebne pridat: "
+  echo "* KRAZ12=\"Intrastat Gui\"
+	  KRAZ13=\"IntratstatGui-\$SETUP_VERSION.war\"
+	  "
+  echo ""
+  
+  echo -e "$RED 03.09.2014: $NC"
+  echo "----------------------------------------------------------------------------"
+  echo "* Version 2.3"
+  echo "* Upraveny deploy KRAZ (ne)potrebne odstranit: "
+  echo "* KRAZ12=\"Intrastat Gui\"
+	  KRAZ13=\"IntratstatGui-\$SETUP_VERSION.war\"
+	  "
+  echo ""
+  
+  
+  echo -e "$RED 08.09.2014: $NC"
+  echo "----------------------------------------------------------------------------"
+  echo "* Version 2.4"
+  echo "* Pridany deploy KRAZ-MOCK, potrebne pridat: "
+  echo "* KRAZ_MOCK_1=\"Kraz2\$BRANCH_SFX/Ear-mock/target/Kraz.ear\"
+	  KRAZ_MOCK_2=\"Kraz.ear\"
+	  KRAZ_MOCK_3=\"Kraz\"
+	  KRAZ_MOCK_4=\"KrazBusinessServiceImpl-mock-\$SETUP_VERSION.jar\"
+	  KRAZ_MOCK_5=\"KrazBusinessServiceImpl-mock-\$SETUP_VERSION.jar\"
+	  KRAZ_MOCK_6=\"Kraz Gui\"
+	  KRAZ_MOCK_7=\"KrazGui-\$SETUP_VERSION.war\"
+	  "
+  echo ""
+  echo -e "$RED 16.09.2014: $NC"
+  echo "----------------------------------------------------------------------------"
+  echo "* Version 2.5"
+  echo "* Pridany deploy Intrastat a Intrastat-mock, potrebne pridat: "
+  echo "*   #INTRASTAT
+	    INTR1=\"Intrastat\$BRANCH_SFX/Ear/target/Intrastat.ear\"
+	    INTR2=\"Intrastat.ear\"
+	    INTR3=\"Intrastat\"
+	    INTR4=\"IntrastatCoreDaoImpl-\$SETUP_VERSION.jar\"
+	    INTR5=\"IntrastatCoreDaoImpl-\$SETUP_VERSION.jar\"
+	    INTR6=\"IntrastatBusinessServiceImpl-\$SETUP_VERSION.jar\"
+	    INTR7=\"IntrastatBusinessServiceImpl-\$SETUP_VERSION.jar\"
+	    INTR8=\"Intrastat Gui\"
+	    INTR9=\"IntrastatGui-\$SETUP_VERSION.war\"
+
+	    #INTRASTAT_MOCK
+	    INTR_MOCK_1=\"Intrastat\$BRANCH_SFX/Ear-mock/target/Intrastat.ear\"
+	    INTR_MOCK_2=\"Intrastat.ear\"
+	    INTR_MOCK_3=\"Intrastat\"
+	    INTR_MOCK_4=\"IntrastatBusinessServiceImpl-mock-\$SETUP_VERSION.jar\"
+	    INTR_MOCK_5=\"IntrastatBusinessServiceImpl-mock-\$SETUP_VERSION.jar\"
+	    INTR_MOCK_6=\"Intrastat Gui\"
+	    INTR_MOCK_7=\"IntrastatGui-\$SETUP_VERSION.war\" 
+	  "
+  echo ""
+  read
+}
+
+checkIfNewVersionAvailable(){
+  local targetVersionOfScript=$(wget -qO- http://andreus.valec.net/wasControlNews | cat | grep "Verzia" | cut -d ":" -f2 | sed 's/ //g')
+  if [ "$targetVersionOfScript" == "$ACTUAL_SCRIPT_VERSION" ]
+  then
+    echo "0"
+  else
+    echo "1"
+  fi
+}
+
+whatsInNewVersion(){
+  wget -qO- http://andreus.valec.net/wasControlNews | cat 
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+}
+
+about(){
+clear
+echo "				(c) Andreus 2014"
+echo "	 		      peter.andreus@gmail.com"
+echo ""
+echo "" 
+echo "			             .888888:."
+echo "			             88888.888."
+echo "			            .8888888888"
+echo "			            8' \`88' \`888"
+echo "			            8 8 88 8 888"
+echo "			            8:.,::,.:888"
+echo "			           .8\`::::::'888"
+echo "			           88  \`::'  888"
+echo "			          .88        \`888."
+echo "			        .88'   .::.  .:8888."
+echo "			        888.'   :'    \`'88:88."
+echo "			      .8888'    '        88:88."
+echo "			     .8888'     .        88:888"
+echo "			     \`88888     :        8:888'"
+echo "			      \`.:.88    .       .::888'"
+echo "			     .:::::88   \`      .:::::::."
+echo "			    .::::::.8         .:::::::::"
+echo "			    :::::::::..     .:::::::::'"
+echo "			     \`:::::::::88888:::::::'"
+echo "			        rs\`:::'       \`:'"
+read
+}

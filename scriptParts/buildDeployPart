@@ -1,0 +1,34 @@
+
+buildAndDeploy(){
+  rm $BUILD_LOG
+
+  echo "a. METIS 		b. ZBER	"
+  echo "c. IAM			d. TASKAPP	"
+  echo "e. LOGAPP		f. ScriptLang"
+  echo "g. WebServices 	 	h. ZBD "
+  echo "i. Regis		j. Kraz - jj.Mock "
+  echo "k. Intrastat - kk. Mock "
+  echo ""
+  echo "u. METIS GUI		v. ZBER GUI"
+  echo "w. ZBD GUI		x. IAM GUI"
+  echo "y. LogApp GUI		z. ISIS Menu"
+  echo "								0. back"
+  echo "							       00. exit"
+  echo -n "Vyber moznost(i): "
+  read deployOption;
+  
+  buildOption=$(echo $deployOption | sed 's/u/a/g' | sed 's/v/b/g' | sed 's/w/h/g' | sed 's/x/c/g' | sed 's/y/e/g' | sed 's/z/y/g' );
+  
+  build $buildOption ;
+  if grep -q FAILURE "$BUILD_LOG" 
+  then
+    echo -e "$RED Build zlyhal!! $NC"
+    read 
+  else
+    echo -e "$GREEN Build prebehol v poriadku $NC"
+    echo -e "$BLUE Pokracuje Deploy $NC"
+  
+  rm $DEPLOY_LOG
+    deploy $deployOption | tee $DEPLOY_LOG;
+  fi  
+}

@@ -1,0 +1,117 @@
+
+selfUpdate(){
+  cd $LOCAL_DIR
+  wget -c http://andreus.valec.net/wasControlUpdate.sh
+
+  SCRIPT_NAME=$(basename $0)
+  POINTER="$( cat $SCRIPT_NAME | grep 'SELF UPDATE POINTER' -m1 -n| cut -d':' -f1 )"
+  POINTER_NEW="$( cat wasControlUpdate.sh | grep 'SELF UPDATE POINTER' -m1 -n| cut -d':' -f1 )"
+  SCRIPT_SIZE_NEW="$( cat wasControlUpdate.sh | wc -l)"
+  let "POINTERPLUS_NEW= $POINTER_NEW + 1"
+
+  sed "1,$POINTER!d" $SCRIPT_NAME > HEAD.TILE
+  sed "$POINTERPLUS_NEW,$SCRIPT_SIZE_NEW!d" wasControlUpdate.sh > TAIL.TILE
+
+  cat HEAD.TILE TAIL.TILE > newWasControl.sh
+
+  rm wasControlUpdate.sh HEAD.TILE TAIL.TILE
+  mv newWasControl.sh $SCRIPT_NAME
+  chmod +x $SCRIPT_NAME
+  cd $LOCAL_DIR
+  bash $(basename $0)
+  exit
+}
+
+setDeployScript(){
+  clear
+  
+  REL_PATH_SCRIPT=$(cat $ISIS_DEVEL/Metis/Gui/src/main/scripts/portaldevel_deploy_war.sh | grep 'SCRIPT_REL_PATH=')
+  REL_PATH=$(echo $REL_PATH_SCRIPT | cut -d '"' -f2)
+  
+  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_ERSION/g $ISIS_DEVEL/Metis/Gui/src/main/scripts/deployScript.sh
+  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $ISIS_DEVEL/Metis/Gui/src/main/scripts/deployMetisGuiWar.sh
+  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $ISIS_DEVEL/Metis/Gui/src/main/scripts/portaldevel_deploy_war.sh
+  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $ISIS_DEVEL/Metis/Gui/src/main/scripts/update.xmlaccess
+  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $ISIS_DEVEL/Zber/Gui/src/main/scripts/portaldevel_deploy_war.sh
+  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/update.xmlaccess"
+  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/ZBER/update.xmlaccess"
+  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/ZBD/update.xmlaccess"
+  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/IAM/update.xmlaccess"
+  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/LogApp/update.xmlaccess"
+  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/ISIS_GUI/update.xmlaccess"
+  
+  
+  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$ACTUAL_VERSION/g $ISIS_DEVEL/Metis/Ear/deploy_ear.sh
+  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$ACTUAL_VERSION/g $ISIS_DEVEL/Metis/Ear/wasdevel_deploy_ear.sh
+  
+  echo "Update scriptov prebehol"
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+}
+
+
+
+removeOldJars(){
+
+  let "OLD_VERSION = $(echo $SETUP_VERSION | cut -d"." -f2 ) -1"
+  RMIAMSECURITY="$VIRTUAL_PORTAL/shared/ext/IsisSecurityProject-*.jar"
+  RMIAMLOGINFACADE="$VIRTUAL_PORTAL/shared/ext/IamBusinessServiceFacadeForCustomLoginProject-*.jar"
+  RMIAMLOGIN="$VIRTUAL_PORTAL/shared/ext/IamAuthCustomLoginModuleProject-*.jar"
+  RMCOMMONUTILS="$VIRTUAL_WAS/lib/ext/CommonUtilsProject-*.jar"
+  RMEJBPORTAL="$VIRTUAL_WAS/lib/ext/EjbConfigProject-*.jar"
+  RMEJBWAS="$VIRTUAL_WAS/lib/ext/EjbConfigProject-*.jar"
+  RMCOMMONUTILSWAS="$VIRTUAL_WAS/lib/ext/CommonUtilsProject-*.jar"
+  echo "Navrhujem mazat veci:"
+  echo $RMIAMSECURITY;
+  echo $RMIAMLOGINFACADE;
+  echo $RMIAMLOGIN;
+  echo $RMCOMMONUTILS;
+  echo $RMEJBPORTAL;
+  echo $RMEJBWAS;
+  echo $RMCOMMONUTILSWAS;
+  echo
+  echo "Je to v poriadku?(y/N)"
+  read remover
+  if [ "$remover" == "y" ] || [ "$remover" == "Y" ] || [ "$remover" == "yes" ] || [ "$remover" == "yES" ] || [ "$remover" == "Yes" ] || [ "$remover" == "YES" ] 
+  then
+    echo "Mazem"
+    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMSECURITY"
+    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMLOGINFACADE"
+    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMLOGIN"
+    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMCOMMONUTILS"
+    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMEJBPORTAL"
+    ssh $HOST_USER@$HOST "rm -fvr $RMCOMMONUTILSWASL"
+    ssh $HOST_USER@$HOST "rm -fvr $RMEJBWAS"
+    ssh $HOST_USER@$HOST "rm -fvr $RMCOMMONUTILSWAS"
+    #for toRM in $(ls *.$OLD_VERSION.0.jar) 
+    #do 
+    #  rm -fv $toRM
+    #done
+  else
+    echo "ok :("
+  fi
+}
+
+sendJars(){
+
+  removeOldJars
+  echo  
+  echo 'Sending ...'
+  scp $ISIS_DEVEL/IsisCommon/IsisSecurity/target/IsisSecurityProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/ext/
+  echo '...'
+  scp $ISIS_DEVEL/Iam/Business/ServiceFacadeForCustomLogin/target/IamBusinessServiceFacadeForCustomLoginProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/ext/
+  echo '...'
+  scp $ISIS_DEVEL/Iam$BRANCH_SFX/Auth/CustomLoginModule/target/IamAuthCustomLoginModuleProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/ext/
+  echo '...'
+  scp $COMMON_DEVEL/CommonUtils/target/CommonUtilsProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_WAS/lib/ext/
+  echo '...'
+  scp $COMMON_DEVEL/CommonUtils/target/CommonUtilsProject-$SETUP_VERSION.jar $HOST_USER@$HOST:$VIRTUAL_WAS/lib/ext/
+  echo '...'
+  scp $COMMON_DEVEL/EjbConfig/target/EjbConfigProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_WAS/lib/ext/
+  echo '...'  
+  scp $COMMON_DEVEL/EjbConfig/target/EjbConfigProject-$SETUP_VERSION.jar $HOST_USER@$HOST:$VIRTUAL_WAS/lib/ext/
+  echo '...'
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+}

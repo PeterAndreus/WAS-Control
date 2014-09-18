@@ -1,9 +1,9 @@
 #!/bin/bash
 
 export MAVEN_OPTS="-Xmx2048m -XX:MaxPermSize=1024m -XX:+CMSClassUnloadingEnabled"
-export JAVA_HOME="/usr/lib/jvm/jdk1.6.0_35" 					# Cesta k ulozenej jave
-export MAVEN_HOME="$HOME/netbeans-8.0/java/maven" 				# Cesta k mavenu
 
+export JAVA_HOME="/usr/lib/jvm/jdk1.6.0_35" 								# Cesta k ulozenej jave
+export MAVEN_HOME="$HOME/netbeans-8.0/java/maven" 					# Cesta k mavenu
 PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$PATH 					# Doplnenie PATH o horne dve cesty
 
 SVN="/home/andreus/svn" 							# Domovsky adresar pre svn
@@ -15,7 +15,7 @@ COMMON_DEVEL="$SVN/Common.devel/trunk"						# SVN cesta pre Common
 EAR_REMOTE_DIR="/tmp/"								# Temporary cesta na upload EAR
 DEPLOY_LOG="/home/andreus/deploy.log"						# Cesta pre ulozenie deploy Logu
 BUILD_LOG="/home/andreus/build.log"						# Cesta pre ulozenie build Logu
-ACTUAL_VERSION="1.20.0"								# Aktualna verzia
+ACTUAL_VERSION="1.19.0"								# Aktualna verzia
 SCRIPT_REL_PATH="/root/scripts/"						# Adresar so skriptamy na deploy war
 WPS_ADMIN_URL="http://$HOST_PORTAL:10039/wps/config"				# URL pre deploy WARka
 PROFILE_BUILD="0"								# Nastavenie buildenia cez profil
@@ -74,16 +74,16 @@ REMOTE_EJB_URL_WASDEFAULT="wasdevel:9813:cell/nodes/wasdevelNode01/servers/wasde
 BRANCH_BUILD="1"							# Povolit build z branchu/tagu/trunku
 
 #Buildenie z Branchu
-LAST_VERSION_NUMBER="0"							# Minoritna verzia
-BRANCH_VERSION="1.19"							# Majoritna  verzia
+LAST_VERSION_NUMBER="3"							# Minoritna verzia
+BRANCH_VERSION="1.17"							# Majoritna  verzia
 ISIS_DEVEL_BRANCH="$SVN/Isis.devel/branches/$BRANCH_VERSION.x"		# Cesta k ISIS branch v SVN
 COMMON_DEVEL_BRANCH="$SVN/Common.devel/branches/$BRANCH_VERSION.x"	# Cesta k Common branch v SVN
 BRANCH_SFX=""								# neMetis branch suffix
 
 
 #Buildenie z Tag
-LAST_TAG_VERSION_NUMBER="0"							# Minoritna verzia
-TAG_VERSION="1.19"								# Majoritna verzia
+LAST_TAG_VERSION_NUMBER="1"							# Minoritna verzia
+TAG_VERSION="1.14"								# Majoritna verzia
 ISIS_DEVEL_TAG="$SVN/Isis.devel/tags/$TAG_VERSION.$LAST_TAG_VERSION_NUMBER"	# Cesta k ISIS branch v SVN
 COMMON_DEVEL_TAG="$SVN/Common.devel/tags/$TAG_VERSION.$LAST_TAG_VERSION_NUMBER"	# Cesta k Common branch v SVN
 
@@ -258,6 +258,7 @@ BLINK="\033[5m"
 REVERSE="\033[7m"
 UNDERLINE="\033[4m"
 ACTUAL_SCRIPT_VERSION="2.5"
+
 
 setProfileVariables(){
   eval tmp='HOST'$ACTUAL_PROFILE
@@ -466,165 +467,6 @@ chooseBuildPath(){
 
 upload() {
  scp $1 $HOST_USER@$HOST:$2
-}
-
-
-touchMeGently(){
-  find $1 -name '*.jsp' -exec touch '{}' \;
-}
-
-nyanCat(){
-telnet miku.acm.uiuc.edu
-}
-
-checkForFiles(){
-clear
-  
-  if [ -d $ISIS_DEVEL ]
-  then
-    echo -e  "$ISIS_DEVEL $BLUE uspesne najdene$NC"
-  else
-    echo -e "$ISIS_DEVEL ${RED}NENAJDENE$NC"
-  fi
-   if [ -d $COMMON_DEVEL ]
-  then
-    echo -e  "$COMMON_DEVEL $BLUE uspesne najdene$NC"
-  else
-    echo -e "$COMMON_DEVEL ${RED}NENAJDENE$NC"
-  fi
-  if [ -d $LOCAL_DIR ]
-  then
-    echo  -e "$LOCAL_DIR $BLUE uspesne najdene$NC"
-  else
-    echo -e "$LOCAL_DIR ${RED}NENAJDENE$NC"
-  fi
-  if [ "$( ping -q -c1 $HOST)" ]
-  then 
-    echo -e "$HOST $BLUE uspesne naviazany$NC"
-  else
-    echo -e "$HOST ${RED} NEUSPESNE NAVIAZANY$NC"
-  fi
-  echo
-  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
-read tmp
-}
-
-setPaths(){
-  cd $LOCAL_DIR
-  clear
-  echo "Nastavenie cesty 'BIN'"
-  echo "default: $BIN"
-  echo
-  echo -n "vasa hodnota (nechaj prazdne pre default): "
-  read userInput
-  if [ ! $userInput = "" ]
-  then
-    sed -i '0,/BIN=".*"/{s,BIN=".*",BIN="'${userInput}'",}' $0
-  fi
-  clear
-  echo "Nastavenie cesty 'SVN'"
-  echo "default: $SVN"
-  echo
-  echo -n "vasa hodnota (nechaj prazdne pre default): "
-  read userInputSVN
-  echo $userInputSVN
-  if [ ! $userInputSVN = "" ]
-  then
-    sed -i '0,/SVN=".*"/{s,SVN=".*",SVN="'${userInputSVN}'",}' $0
-  fi
-  clear
-  echo "Nastavenie cesty 'build.log'"
-  echo "default: $BUILD_LOG"
-  echo
-  echo -n "vasa hodnota (nechaj prazdne pre default): "
-  read userInputBuildLog
-  echo $userInputBuildLog
-  if [ ! $userInputBuildLog = "" ]
-  then
-    sed -i '0,/BUILD_LOG=".*"/{s,BUILD_LOG=".*",BUILD_LOG="'$userInputBuildLog'",}' $0
-  fi
-  clear
-  echo "Nastavenie cesty 'deploy.log'"
-  echo "default: $DEPLOY_LOG"
-  echo
-  echo -n "vasa hodnota (nechaj prazdne pre default): "
-  read userInputDeployLog
-  echo $userInputDeployLog
-  if [ ! $userInputDeployLog = "" ]
-  then
-    sed -i '0,/DEPLOY_LOG=".*"/{s,DEPLOY_LOG=".*",DEPLOY_LOG="'$userInputDeployLog'",}' $0
-  fi
-  
-  clear;
-  echo "Cesty su nastavene na :" 
-  echo "$(cat $(basename $0) | grep -x BIN=".*")"
-  echo "$(cat $(basename $0) | grep -x SVN=".*")"
-  echo "$(cat $(basename $0) | grep -x BUILD_LOG=".*")"
-  echo "$(cat $(basename $0) | grep -x DEPLOY_LOG=".*")"
-  echo
-  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
-  read
-  cd $LOCAL_DIR
-  bash $(basename $0)
-  
-  exit
-}
-
-setVersions(){
-  cd $LOCAL_DIR
-  clear
-  echo "Nastavenie aktualnej verzie aplikacii (nie Metis)"
-  echo "default: $ACTUAL_VERSION"
-  echo
-  echo -n "vasa hodnota (nechaj prazdne pre default): "
-  read userActualVersion
-  echo $userActualVersion
-  if [ ! $userActualVersion = "" ]
-  then
-    sed -i '0,/ACTUAL_VERSION=".*"/{s,ACTUAL_VERSION=".*",ACTUAL_VERSION="'$userActualVersion'",}' $0
-  fi
-  clear;
-  echo "Verzie su nastavene na :" 
-  echo "$(cat $(basename $0) | grep -x ACTUAL_VERSION=".*")"
-  echo
-  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
-  read
-  cd $LOCAL_DIR
-  bash $(basename $0)
-  
-  exit
-}
-
-
-configureMenu(){
-  echo "1. Otestuj default hodnoty 		2. Nastav cesty 	"
-  echo "3. Premaz build.log			4. Premaz deploy.log	"
-  echo "5. Nastav aktualne verzie		6. Nastav deploy skripty"
-  echo "7. Automaticky update scriptu		8. Nastav build nastavenia"
-  echo "9. Konfiguracia EJB"
-  echo ""
-  echo "w. What's new				a. About"
-  echo "								0. back"
-  echo "							       00. exit"
-  echo -n "Vyber moznost: "
-  read configureOption;
-
-  case $configureOption in 
-    1)  checkForFiles ;;
-    2)  setPaths ;;
-    3)  echo "" > $BUILD_LOG;;
-    4)  echo "" > $DEPLOY_LOG;;
-    5)  setVersions;;
-    6) 	setDeployScript ;;
-    7)  selfUpdate ;;
-    8) setBuildOptions ;;
-    9) ejbMenu ;;
-    w) whatIsNew ;;
-    a) about ;;
-    0) clear; welcome ;;
-    00) clear; exit ;;
-    *) clear; echo "Chybne zadany vstup"; sleep 1; configureMenu ;;
-  esac
 }
 
 dep01() {
@@ -932,150 +774,8 @@ deployIsisWar(){
   echo "- DEPLOY FINISHED"
 }
 
-showDeployLog(){
-  cat $DEPLOY_LOG | less
-}
-  
-partialDeploy() {
-  case $1 in
-    a* ) deployMetis; 		partialDeploy $(echo $1|tr -d 'a') ;;
-    b* ) deployZber; 		partialDeploy $(echo $1|tr -d 'b') ;;
-    c* ) deployIAM; 		partialDeploy $(echo $1|tr -d 'c') ;;    
-    d* ) deployTaskapp; 	partialDeploy $(echo $1|tr -d 'd') ;;
-    e* ) deployLogapp; 		partialDeploy $(echo $1|tr -d 'e') ;;
-    f* ) deployScriptLang; 	partialDeploy $(echo $1|tr -d 'f') ;;
-    g* ) deployWS; 		partialDeploy $(echo $1|tr -d 'g') ;;
-    h* ) deployZbd; 		partialDeploy $(echo $1|tr -d 'h') ;;
-    i* ) deployRegis; 		partialDeploy $(echo $1|tr -d 'i') ;;
-    jj* ) deployKrazMock; 	partialDeploy $(echo $1|tr -d 'jj') ;;
-    j* ) deployKraz; 		partialDeploy $(echo $1|tr -d 'j') ;;
-    k* ) deployIntrastat; 	partialDeploy $(echo $1|tr -d 'k') ;;    
-    kk* ) deployIntrastatMock; 	partialDeploy $(echo $1|tr -d 'kk') ;;
-    
-    u* ) deployWAR; 		partialDeploy $(echo $1|tr -d 'u') ;;    
-    v* ) deployZberWar; 	partialDeploy $(echo $1|tr -d 'v') ;;
-    w* ) deployZbdWar; 		partialDeploy $(echo $1|tr -d 'w') ;;
-    x* ) deployIamWar; 		partialDeploy $(echo $1|tr -d 'x') ;;
-    y* ) deployLogAppWar; 	partialDeploy $(echo $1|tr -d 'y') ;;
-    z* ) deployIsisWar; 	partialDeploy $(echo $1|tr -d 'z') ;;
-
-    0) clear; welcome ;;
-    00) clear; exit ;;
-    "")  ;;
-    *) clear; echo "Chybne zadany vstup"; sleep 1; chooseDeploy ;;
-  esac
-}
-
-deploy() {
-
-  if [ $1 = "ALL" ]
-  then
-    deployWAR
-    deployZberWar
-    deployIsisWar
-    deployIamWar
-    deployZbdWar
-    deployLogAppWar
-    deployIAM
-    deployLogapp
-    deployTaskapp
-    deployWS
-    deployZber
-    deployZbd
-    deployMetis
-    deployScriptLang    
-    deployKraz
-    deployRegis
-    postDeploy
-  else
-    partialDeploy $1
-    postDeploy
-  fi
-  
-  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
-  read
-}
-
-chooseDeploy() {
-  echo "a. METIS 		b. ZBER	"
-  echo "c. IAM			d. TASKAPP	"
-  echo "e. LOGAPP		f. ScriptLang"
-  echo "g. WebServices 	 	h. ZBD "
-  echo "i. Regis		j. Kraz - jj.Mock "
-  echo "k. Intrastat - kk. Mock "
-  echo ""
-  echo "u. METIS GUI		v. ZBER GUI"
-  echo "w. ZBD GUI		x. IAM GUI"
-  echo "y. LogApp GUI		z. ISIS Menu"
-  echo "								0. back"
-  echo "							       00. exit"
-  echo -n "Vyber moznost(i): "
-  read deployOption;
-
-  deploy $deployOption "1" | tee $DEPLOY_LOG;
-}
-
-
-showBuildLog(){
-  cat $BUILD_LOG | less
-}
-
-setBuildOptions(){
-  cd $LOCAL_DIR
-  clear
-  echo "Nastavenie BuildProfile"
-  echo "default: $PROFILE_BUILD"
-  echo
-  echo -n "vasa hodnota (nechaj prazdne pre default): "
-  read userProfileBuild
-  echo $userProfileBuild
-  if [ ! $userProfileBuild = "" ]
-  then
-    sed -i '0,/PROFILE_BUILD=".*"/{s,PROFILE_BUILD=".*",PROFILE_BUILD="'$userProfileBuild'",}' $0
-  fi
-  clear
-  echo "Nastavenie preskocenia Testov"
-  echo "default: $SKIP_TESTS"
-  echo
-  echo -n "vasa hodnota (nechaj prazdne pre default): "
-  read userSkipTests
-  echo $userSkipTests
-  if [ ! $userSkipTests = "" ]
-  then
-    sed -i '0,/SKIP_TESTS=".*"/{s,SKIP_TESTS=".*",SKIP_TESTS="'$userSkipTests'",}' $0
-  fi
-  
-  clear;
-  echo "Verzie su nastavene na :" 
-  echo "$(cat $(basename $0) | grep -x PROFILE_BUILD=".*")"
-  echo "$(cat $(basename $0) | grep -x SKIP_TESTS=".*")"
-  echo
-  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
-  read
-  cd $LOCAL_DIR
-  bash $(basename $0)
-  
-  exit
-}
-
-pomBuild(){
-  cd  $ISIS_DEVEL
-  
-  if [ "$PROFILE_BUILD" == "1" ]
-  then
-    PR_BUILD="-Pbuild"
-  else
-    PR_BUILD=""
-  fi
-  
-  if [ "$SKIP_TESTS" == "1" ]
-  then
-    TST_BUILD="-DskipTests=true"
-  else
-    TST_BUILD=""
-  fi
-  mvn clean install $PR_BUILD $TST_BUILD | tee $BUILD_LOG
-  cd $LOCAL_DIR
+touchMeGently(){
+  find $1 -name '*.jsp' -exec touch '{}' \;
 }
 
 buildISISCommons(){
@@ -1147,7 +847,11 @@ buildZber(){
 buildKRAZ(){
   cd $ISIS_DEVEL/Kraz2$BRANCH_SFX
   touchMeGently './'
-  mvn clean install $1 $2  
+  mvn clean install $1 $2
+  
+  cd $ISIS_DEVEL/Kraz2-mock$BRANCH_SFX
+  touchMeGently './'
+  mvn clean install $1 $2
 }
 
 buildIntrastat(){
@@ -1156,13 +860,41 @@ buildIntrastat(){
   mvn clean install $1 $2
 }
 
+
 buildRegis(){
   cd $ISIS_DEVEL/Regis2$BRANCH_SFX
   touchMeGently './'
   mvn clean install $1 $2
 }
 
+partialDeploy() {
+  case $1 in
+    10* ) deployIntrastat; partialDeploy $(echo $1|tr -d '10') ;;    
+    11* ) deployIntrastatMock; partialDeploy $(echo $1|tr -d '11') ;;
+    1* ) deployMetis; partialDeploy $(echo $1|tr -d '1') ;;
+    2* ) deployZber; partialDeploy $(echo $1|tr -d '2') ;;
+    3* ) deployIAM; partialDeploy $(echo $1|tr -d '3') ;;    
+    4* ) deployTaskapp; partialDeploy $(echo $1|tr -d '4') ;;
+    5* ) deployLogapp; partialDeploy $(echo $1|tr -d '5') ;;
+    6* ) deployScriptLang; partialDeploy $(echo $1|tr -d '6') ;;
+    7* ) deployRegis; partialDeploy $(echo $1|tr -d '7') ;;
+    8* ) deployZbd; partialDeploy $(echo $1|tr -d '8') ;;
+    99* ) deployKrazMock; partialDeploy $(echo $1|tr -d '99') ;;
+    9* ) deployKraz; partialDeploy $(echo $1|tr -d '9') ;;
+    a* ) deployWAR; partialDeploy $(echo $1|tr -d 'a') ;;    
+    b* ) deployZberWar; partialDeploy $(echo $1|tr -d 'b') ;;
+    c* ) deployZbdWar; partialDeploy $(echo $1|tr -d 'c') ;;
+    d* ) deployIamWar; partialDeploy $(echo $1|tr -d 'd') ;;
+    e* ) deployLogAppWar; partialDeploy $(echo $1|tr -d 'e') ;;
+    f* ) deployIsisWar; partialDeploy $(echo $1|tr -d 'f') ;;
+    g* ) deployWS; partialDeploy $(echo $1|tr -d 'g') ;;
 
+    0) clear; welcome ;;
+    00) clear; exit ;;
+    "")  ;;
+    *) clear; echo "Chybne zadany vstup"; sleep 1; chooseDeploy ;;
+  esac
+}
 cleanPartialBuildLog(){
   if [ -f partialBuildLog.log ]
   then
@@ -1182,7 +914,6 @@ cleanPartialBuildLog(){
     rm partialBuildLog.log
   fi
 }
-
 partialBuild(){  
   cleanPartialBuildLog
   
@@ -1201,23 +932,49 @@ partialBuild(){
 	  partialBuild $(echo $1|tr -d 'f') ;;
     g* ) buildWebServices $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
 	  partialBuild $(echo $1|tr -d 'g') ;;
-    h* ) buildZBD $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    h* ) buildCommons $PR_BUILD $TST_BUILD | tee partialBuildLog.logs; 
 	  partialBuild $(echo $1|tr -d 'h') ;;
-    i* ) buildRegis $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    i* ) buildISISCommons $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
 	  partialBuild $(echo $1|tr -d 'i') ;;
-    j* ) buildKRAZ $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    j* ) buildPDB $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
 	  partialBuild $(echo $1|tr -d 'j') ;;
-    k* ) buildIntrastat $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+    k* ) buildZBD $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
 	  partialBuild $(echo $1|tr -d 'k') ;;
-    y* ) buildISISCommons $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
-	  partialBuild $(echo $1|tr -d 'y') ;;
-    z* ) buildCommons $PR_BUILD $TST_BUILD | tee partialBuildLog.logs; 
-	  partialBuild $(echo $1|tr -d 'z') ;;
+    l* ) buildKRAZ $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+	  partialBuild $(echo $1|tr -d 'l') ;;
+    m* ) buildRegis $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+	  partialBuild $(echo $1|tr -d 'm') ;;
+    n* ) buildIntrastat $PR_BUILD $TST_BUILD | tee partialBuildLog.log; 
+	  partialBuild $(echo $1|tr -d 'n') ;;
     0) clear; welcome ;;
     00) clear; exit ;;
     "")  ;;
     *) clear; echo "Chybne zadany vstup"; sleep 1; chooseBuild ;;
   esac
+}
+
+nyanCat(){
+telnet miku.acm.uiuc.edu
+}
+pomBuild(){
+  cd  $ISIS_DEVEL
+  
+  if [ "$PROFILE_BUILD" == "1" ]
+  then
+    PR_BUILD="-Pbuild"
+  else
+    PR_BUILD=""
+  fi
+  
+  if [ "$SKIP_TESTS" == "1" ]
+  then
+    TST_BUILD="-DskipTests=true"
+  else
+    TST_BUILD=""
+  fi
+  mvn clean install $PR_BUILD $TST_BUILD | tee $BUILD_LOG
+
+  cd $LOCAL_DIR
 }
 
 build(){
@@ -1272,61 +1029,242 @@ build(){
   cd $LOCAL_DIR
 }
 
-chooseBuild() {
-  echo "a. Metis 	 	b. ZBER 	"
-  echo "c. IAM 			d. TASKAPP	"
-  echo "e. LogApp 		f. ScriptLang "
-  echo "g. WebServices  	h. ZBD"
-  echo "i. Regis 		j. KRAZ "
-  echo "k. Intrastat		"
-  
-  echo "y. ISISCommon		z. COMMONS"
-  echo "								0. back"
-  echo "							       00. exit"
-  echo -n "Vyber moznost(i): "
-  read buildOption;
+deploy() {
 
-  build $buildOption ;
-  if grep -q FAILURE "$BUILD_LOG" 
+  if [ $1 = "ALL" ]
   then
-       echo -e "$RED Build zlyhal!! $NC"
-  fi
-  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
-  read 
-}
-buildAndDeploy(){
-  rm $BUILD_LOG
-
-  echo "a. METIS 		b. ZBER	"
-  echo "c. IAM			d. TASKAPP	"
-  echo "e. LOGAPP		f. ScriptLang"
-  echo "g. WebServices 	 	h. ZBD "
-  echo "i. Regis		j. Kraz - jj.Mock "
-  echo "k. Intrastat - kk. Mock "
-  echo ""
-  echo "u. METIS GUI		v. ZBER GUI"
-  echo "w. ZBD GUI		x. IAM GUI"
-  echo "y. LogApp GUI		z. ISIS Menu"
-  echo "								0. back"
-  echo "							       00. exit"
-  echo -n "Vyber moznost(i): "
-  read deployOption;
-  
-  buildOption=$(echo $deployOption | sed 's/u/a/g' | sed 's/v/b/g' | sed 's/w/h/g' | sed 's/x/c/g' | sed 's/y/e/g' | sed 's/z/y/g' );
-  
-  build $buildOption ;
-  if grep -q FAILURE "$BUILD_LOG" 
-  then
-    echo -e "$RED Build zlyhal!! $NC"
-    read 
+    deployWAR
+    deployZberWar
+    deployIsisWar
+    deployIamWar
+    deployZbdWar
+    deployLogAppWar
+    deployIAM
+    deployLogapp
+    deployTaskapp
+    deployWS
+    deployZber
+    deployZbd
+    deployMetis
+    deployScriptLang    
+    deployKraz
+    deployRegis
+    postDeploy
   else
-    echo -e "$GREEN Build prebehol v poriadku $NC"
-    echo -e "$BLUE Pokracuje Deploy $NC"
+    partialDeploy $1
+    postDeploy
+  fi
   
-  rm $DEPLOY_LOG
-    deploy $deployOption | tee $DEPLOY_LOG;
-  fi  
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
 }
+
+checkForFiles(){
+clear
+  
+  if [ -d $ISIS_DEVEL ]
+  then
+    echo -e  "$ISIS_DEVEL $BLUE uspesne najdene$NC"
+  else
+    echo -e "$ISIS_DEVEL ${RED}NENAJDENE$NC"
+  fi
+   if [ -d $COMMON_DEVEL ]
+  then
+    echo -e  "$COMMON_DEVEL $BLUE uspesne najdene$NC"
+  else
+    echo -e "$COMMON_DEVEL ${RED}NENAJDENE$NC"
+  fi
+  if [ -d $LOCAL_DIR ]
+  then
+    echo  -e "$LOCAL_DIR $BLUE uspesne najdene$NC"
+  else
+    echo -e "$LOCAL_DIR ${RED}NENAJDENE$NC"
+  fi
+  if [ "$( ping -q -c1 $HOST)" ]
+  then 
+    echo -e "$HOST $BLUE uspesne naviazany$NC"
+  else
+    echo -e "$HOST ${RED} NEUSPESNE NAVIAZANY$NC"
+  fi
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+read tmp
+}
+
+setPaths(){
+  cd $LOCAL_DIR
+  clear
+  echo "Nastavenie cesty 'BIN'"
+  echo "default: $BIN"
+  echo
+  echo -n "vasa hodnota (nechaj prazdne pre default): "
+  read userInput
+  if [ ! $userInput = "" ]
+  then
+    sed -i '0,/BIN=".*"/{s,BIN=".*",BIN="'${userInput}'",}' $0
+  fi
+  clear
+  echo "Nastavenie cesty 'SVN'"
+  echo "default: $SVN"
+  echo
+  echo -n "vasa hodnota (nechaj prazdne pre default): "
+  read userInputSVN
+  echo $userInputSVN
+  if [ ! $userInputSVN = "" ]
+  then
+    sed -i '0,/SVN=".*"/{s,SVN=".*",SVN="'${userInputSVN}'",}' $0
+  fi
+  clear
+  echo "Nastavenie cesty 'build.log'"
+  echo "default: $BUILD_LOG"
+  echo
+  echo -n "vasa hodnota (nechaj prazdne pre default): "
+  read userInputBuildLog
+  echo $userInputBuildLog
+  if [ ! $userInputBuildLog = "" ]
+  then
+    sed -i '0,/BUILD_LOG=".*"/{s,BUILD_LOG=".*",BUILD_LOG="'$userInputBuildLog'",}' $0
+  fi
+  clear
+  echo "Nastavenie cesty 'deploy.log'"
+  echo "default: $DEPLOY_LOG"
+  echo
+  echo -n "vasa hodnota (nechaj prazdne pre default): "
+  read userInputDeployLog
+  echo $userInputDeployLog
+  if [ ! $userInputDeployLog = "" ]
+  then
+    sed -i '0,/DEPLOY_LOG=".*"/{s,DEPLOY_LOG=".*",DEPLOY_LOG="'$userInputDeployLog'",}' $0
+  fi
+  
+  clear;
+  echo "Cesty su nastavene na :" 
+  echo "$(cat $(basename $0) | grep -x BIN=".*")"
+  echo "$(cat $(basename $0) | grep -x SVN=".*")"
+  echo "$(cat $(basename $0) | grep -x BUILD_LOG=".*")"
+  echo "$(cat $(basename $0) | grep -x DEPLOY_LOG=".*")"
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+  cd $LOCAL_DIR
+  bash $(basename $0)
+  
+  exit
+}
+
+setVersions(){
+  cd $LOCAL_DIR
+  clear
+  echo "Nastavenie aktualnej verzie aplikacii (nie Metis)"
+  echo "default: $ACTUAL_VERSION"
+  echo
+  echo -n "vasa hodnota (nechaj prazdne pre default): "
+  read userActualVersion
+  echo $userActualVersion
+  if [ ! $userActualVersion = "" ]
+  then
+    sed -i '0,/ACTUAL_VERSION=".*"/{s,ACTUAL_VERSION=".*",ACTUAL_VERSION="'$userActualVersion'",}' $0
+  fi
+  clear;
+  echo "Verzie su nastavene na :" 
+  echo "$(cat $(basename $0) | grep -x ACTUAL_VERSION=".*")"
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+  cd $LOCAL_DIR
+  bash $(basename $0)
+  
+  exit
+}
+
+selfUpdate(){
+  cd $LOCAL_DIR
+  wget -c http://andreus.valec.net/wasControlUpdate.sh
+
+  SCRIPT_NAME=$(basename $0)
+  POINTER="$( cat $SCRIPT_NAME | grep 'SELF UPDATE POINTER' -m1 -n| cut -d':' -f1 )"
+  POINTER_NEW="$( cat wasControlUpdate.sh | grep 'SELF UPDATE POINTER' -m1 -n| cut -d':' -f1 )"
+  SCRIPT_SIZE_NEW="$( cat wasControlUpdate.sh | wc -l)"
+  let "POINTERPLUS_NEW= $POINTER_NEW + 1"
+
+  sed "1,$POINTER!d" $SCRIPT_NAME > HEAD.TILE
+  sed "$POINTERPLUS_NEW,$SCRIPT_SIZE_NEW!d" wasControlUpdate.sh > TAIL.TILE
+
+  cat HEAD.TILE TAIL.TILE > newWasControl.sh
+
+  rm wasControlUpdate.sh HEAD.TILE TAIL.TILE
+  mv newWasControl.sh $SCRIPT_NAME
+  chmod +x $SCRIPT_NAME
+  cd $LOCAL_DIR
+  bash $(basename $0)
+  exit
+}
+
+setDeployScript(){
+  clear
+  
+  REL_PATH_SCRIPT=$(cat $ISIS_DEVEL/Metis/Gui/src/main/scripts/portaldevel_deploy_war.sh | grep 'SCRIPT_REL_PATH=')
+  REL_PATH=$(echo $REL_PATH_SCRIPT | cut -d '"' -f2)
+  
+  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_ERSION/g $ISIS_DEVEL/Metis/Gui/src/main/scripts/deployScript.sh
+  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $ISIS_DEVEL/Metis/Gui/src/main/scripts/deployMetisGuiWar.sh
+  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $ISIS_DEVEL/Metis/Gui/src/main/scripts/portaldevel_deploy_war.sh
+  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $ISIS_DEVEL/Metis/Gui/src/main/scripts/update.xmlaccess
+  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $ISIS_DEVEL/Zber/Gui/src/main/scripts/portaldevel_deploy_war.sh
+  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/update.xmlaccess"
+  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/ZBER/update.xmlaccess"
+  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/ZBD/update.xmlaccess"
+  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/IAM/update.xmlaccess"
+  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/LogApp/update.xmlaccess"
+  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/ISIS_GUI/update.xmlaccess"
+  
+  
+  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$ACTUAL_VERSION/g $ISIS_DEVEL/Metis/Ear/deploy_ear.sh
+  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$ACTUAL_VERSION/g $ISIS_DEVEL/Metis/Ear/wasdevel_deploy_ear.sh
+  
+  echo "Update scriptov prebehol"
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+}
+
+setBuildOptions(){
+  cd $LOCAL_DIR
+  clear
+  echo "Nastavenie BuildProfile"
+  echo "default: $PROFILE_BUILD"
+  echo
+  echo -n "vasa hodnota (nechaj prazdne pre default): "
+  read userProfileBuild
+  echo $userProfileBuild
+  if [ ! $userProfileBuild = "" ]
+  then
+    sed -i '0,/PROFILE_BUILD=".*"/{s,PROFILE_BUILD=".*",PROFILE_BUILD="'$userProfileBuild'",}' $0
+  fi
+  clear
+  echo "Nastavenie preskocenia Testov"
+  echo "default: $SKIP_TESTS"
+  echo
+  echo -n "vasa hodnota (nechaj prazdne pre default): "
+  read userSkipTests
+  echo $userSkipTests
+  if [ ! $userSkipTests = "" ]
+  then
+    sed -i '0,/SKIP_TESTS=".*"/{s,SKIP_TESTS=".*",SKIP_TESTS="'$userSkipTests'",}' $0
+  fi
+  
+  clear;
+  echo "Verzie su nastavene na :" 
+  echo "$(cat $(basename $0) | grep -x PROFILE_BUILD=".*")"
+  echo "$(cat $(basename $0) | grep -x SKIP_TESTS=".*")"
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+  cd $LOCAL_DIR
+  bash $(basename $0)
+  
+  exit
+}
+
 whatIsNew(){
 clear  
   echo -e $UNDERLINE"Verzia:2.5 $NE"
@@ -1393,6 +1331,437 @@ clear
   read
 }
 
+
+removeOldJars(){
+
+  let "OLD_VERSION = $(echo $SETUP_VERSION | cut -d"." -f2 ) -1"
+  RMIAMSECURITY="$VIRTUAL_PORTAL/shared/ext/IsisSecurityProject-*.jar"
+  RMIAMLOGINFACADE="$VIRTUAL_PORTAL/shared/ext/IamBusinessServiceFacadeForCustomLoginProject-*.jar"
+  RMIAMLOGIN="$VIRTUAL_PORTAL/shared/ext/IamAuthCustomLoginModuleProject-*.jar"
+  RMCOMMONUTILS="$VIRTUAL_WAS/lib/ext/CommonUtilsProject-*.jar"
+  RMEJBPORTAL="$VIRTUAL_WAS/lib/ext/EjbConfigProject-*.jar"
+  RMEJBWAS="$VIRTUAL_WAS/lib/ext/EjbConfigProject-*.jar"
+  RMCOMMONUTILSWAS="$VIRTUAL_WAS/lib/ext/CommonUtilsProject-*.jar"
+  echo "Navrhujem mazat veci:"
+  echo $RMIAMSECURITY;
+  echo $RMIAMLOGINFACADE;
+  echo $RMIAMLOGIN;
+  echo $RMCOMMONUTILS;
+  echo $RMEJBPORTAL;
+  echo $RMEJBWAS;
+  echo $RMCOMMONUTILSWAS;
+  echo
+  echo "Je to v poriadku?(y/N)"
+  read remover
+  if [ "$remover" == "y" ] || [ "$remover" == "Y" ] || [ "$remover" == "yes" ] || [ "$remover" == "yES" ] || [ "$remover" == "Yes" ] || [ "$remover" == "YES" ] 
+  then
+    echo "Mazem"
+    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMSECURITY"
+    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMLOGINFACADE"
+    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMLOGIN"
+    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMCOMMONUTILS"
+    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMEJBPORTAL"
+    ssh $HOST_USER@$HOST "rm -fvr $RMCOMMONUTILSWASL"
+    ssh $HOST_USER@$HOST "rm -fvr $RMEJBWAS"
+    ssh $HOST_USER@$HOST "rm -fvr $RMCOMMONUTILSWAS"
+    #for toRM in $(ls *.$OLD_VERSION.0.jar) 
+    #do 
+    #  rm -fv $toRM
+    #done
+  else
+    echo "ok :("
+  fi
+}
+
+sendJars(){
+
+  removeOldJars
+  echo  
+  echo 'Sending ...'
+  scp $ISIS_DEVEL/IsisCommon/IsisSecurity/target/IsisSecurityProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/ext/
+  echo '...'
+  scp $ISIS_DEVEL/Iam/Business/ServiceFacadeForCustomLogin/target/IamBusinessServiceFacadeForCustomLoginProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/ext/
+  echo '...'
+  scp $ISIS_DEVEL/Iam$BRANCH_SFX/Auth/CustomLoginModule/target/IamAuthCustomLoginModuleProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/ext/
+  echo '...'
+  scp $COMMON_DEVEL/CommonUtils/target/CommonUtilsProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_WAS/lib/ext/
+  echo '...'
+  scp $COMMON_DEVEL/CommonUtils/target/CommonUtilsProject-$SETUP_VERSION.jar $HOST_USER@$HOST:$VIRTUAL_WAS/lib/ext/
+  echo '...'
+  scp $COMMON_DEVEL/EjbConfig/target/EjbConfigProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_WAS/lib/ext/
+  echo '...'  
+  scp $COMMON_DEVEL/EjbConfig/target/EjbConfigProject-$SETUP_VERSION.jar $HOST_USER@$HOST:$VIRTUAL_WAS/lib/ext/
+  echo '...'
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+}
+
+svnUpdate(){
+  
+  cd $COMMON_DEVEL 
+  svn update
+  
+  cd $ISIS_DEVEL
+  svn update
+  
+  cd $LOCAL_DIR
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+}
+svnBranchUpdate(){
+  cd $COMMON_DEVEL_BRANCH 
+  svn update
+  
+  cd $ISIS_DEVEL_BRANCH
+  svn update
+  
+  cd $LOCAL_DIR
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+}
+restartMachine(){
+  ssh $HOST_USER@$1 "/root/bin/was-control.sh restart" 
+}
+startMachine(){
+  ssh $HOST_USER@$1 "/root/bin/was-control.sh start"
+}
+stopMachine(){
+  ssh $HOST_USER@$1 "/root/bin/was-control.sh stop"
+}
+machineControl(){
+  case $1 in
+    *1* ) startMachine $HOST; machineControl $(echo $1|tr -d '1') ;;
+    *2* ) startMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '2') ;;
+    *3* ) stopMachine $HOST; machineControl $(echo $1|tr -d '3') ;;
+    *4* ) stopMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '4') ;;
+    *5* ) restartMachine $HOST; machineControl $(echo $1|tr -d '5') ;;
+    *6* ) restartMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '6') ;;
+    *7* ) startMachine $HOST;
+	  startMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '7') ;;
+    *8* ) stopMachine $HOST;
+	  stopMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '8') ;;
+    *9* ) restartMachine $HOST;
+	  restartMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '9') ;;
+    0) clear; welcome ;;
+    00) clear; exit ;;
+    "")  ;;
+    *) clear; echo "Chybne zadany vstup"; sleep 1; chooseControl ;;
+  esac
+}
+
+buildAndDeploy(){
+  rm $BUILD_LOG
+
+  echo "1. METIS 		2. ZBER	"
+  echo "3. IAM			4. TASKAPP	"
+  echo "5. LOGAPP		6. ScriptLang"
+  echo "7. Regis	 	8. ZBD "
+  echo "9. Kraz - 99.Mock	10. Intrastat - 11. Mock"
+  echo ""
+  echo "a. METIS GUI		b. ZBER GUI"
+  echo "c. ZBD GUI		d. IAM GUI"
+  echo "e. LogApp GUI		f. ISIS Menu"
+  echo "g. WS"
+  echo "								0. back"
+  echo "							       00. exit"
+  echo -n "Vyber moznost(i): "
+  read deployOption;
+  
+  buildOption=$(echo $deployOption | sed 's/b/2/g' | sed 's/8/b/g' | sed 's/c/b/g' | sed 's/d/3/g' | sed 's/g/d/g' | sed 's/f/c/g' | sed 's/e/5/g' | sed 's/a/1/g');
+  
+  build $buildOption ;
+  if grep -q FAILURE "$BUILD_LOG" 
+  then
+    echo -e "$RED Build zlyhal!! $NC"
+    read 
+  else
+    echo -e "$GREEN Build prebehol v poriadku $NC"
+    echo -e "$BLUE Pokracuje Deploy $NC"
+  
+  rm $DEPLOY_LOG
+    deploy $deployOption | tee $DEPLOY_LOG;
+  fi  
+}
+
+chooseDeploy() {
+  echo "1. METIS 		2. ZBER	"
+  echo "3. IAM			4. TASKAPP	"
+  echo "5. LOGAPP		6. ScriptLang"
+  echo "7. Regis	 	8. ZBD "
+  echo "9. Kraz - 99.Mock	10. Intrastat - 11. Mock"
+  echo ""
+  echo "a. METIS GUI		b. ZBER GUI"
+  echo "c. ZBD GUI		d. IAM GUI"
+  echo "e. LogApp GUI		f. ISIS Menu"
+  echo "g. WS"
+  echo "								0. back"
+  echo "							       00. exit"
+  echo -n "Vyber moznost(i): "
+  read deployOption;
+
+  deploy $deployOption "1" | tee $DEPLOY_LOG;
+}
+
+chooseBuild() {
+  echo "1. Metis 	 	2. ZBER 	"
+  echo "3. IAM 			4. TASKAPP	"
+  echo "5. LogApp 		6. ScriptLang "
+  echo "7. Regis 		8. COMMONS"
+  echo "9. KRAZ			10. Intrastat"
+  echo "a. PBD			b. ZBD	"
+  echo "c. ISISCommon		d. WebServices"
+  echo "								0. back"
+  echo "							       00. exit"
+  echo -n "Vyber moznost(i): "
+  read buildOption;
+
+  build $buildOption ;
+  if grep -q FAILURE "$BUILD_LOG" 
+  then
+       echo -e "$RED Build zlyhal!! $NC"
+  fi
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read 
+}
+
+chooseControl() {
+  echo "1. Start Devel server(was) 		2. Start Portal server	"
+  echo "3. Vypnut Devel server			4. Vypnut Portal server	"
+  echo "5. Restart Devel server			6. Restart Portal server"
+  echo ""
+  echo "7. Start oboch serverov			8. Vypnut oba servery"
+  echo "9. Restart oboch serverov"
+  echo "								0. back"
+  echo "							       00. exit"
+  echo -n "Vyber moznost(i): "
+  read controlOption;
+
+  machineControl $controlOption 
+  
+  echo
+  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
+  read
+}
+showBuildLog(){
+  cat $BUILD_LOG | less
+}
+
+showDeployLog(){
+  cat $DEPLOY_LOG | less
+}
+
+findJ2EEResourcePorpertyWAS(){
+  let LINE_NUM=$(ssh $HOST_USER@$HOST "cat $VIRTUAL_WAS/profiles/$PROFILE/config/cells/$CELL/resources.xml | grep 'RemoteEJBLocatorReference' -n | cut -d ':' -f1")
+  let "LINE_NUM_1=$(echo $LINE_NUM) +1"
+  J2EE_ENV_ENTRY=$(ssh $HOST_USER@$HOST "cat $VIRTUAL_WAS/profiles/$PROFILE/config/cells/$CELL/resources.xml | sed -n "$(echo $LINE_NUM_1)p" | cut -d'\"' -f2 ")
+}
+findJ2EEResourcePorpertyPortal(){
+  let LINE_NUM=$(ssh $HOST_USER@$HOST_PORTAL "cat $VIRTUAL_WAS/../wp_profile/config/cells/$CELL_PORTAL/resources.xml | grep 'RemoteEJBLocatorReference' -n | cut -d ':' -f1")
+  let "LINE_NUM_1=$(echo $LINE_NUM) +1"
+  J2EE_ENV_ENTRY=$(ssh $HOST_USER@$HOST_PORTAL "cat $VIRTUAL_WAS/../wp_profile/config/cells/$CELL_PORTAL/resources.xml | sed -n "$(echo $LINE_NUM_1)p" | cut -d'\"' -f2 ")
+}
+
+createEjbCustomPropFile(){
+  vi $EJB_CONFIG_WAS_SVN
+}
+createEjbCustomPropFilePortal(){
+  vi $EJB_CONFIG_PORTAL_SVN
+}
+addEJBCustomPropertyWAS(){
+  findJ2EEResourcePorpertyWAS
+  declare -a argAry1=("${!1}")
+  local datum=$(date '+%d-%m-%Y')
+  
+  for property in "${argAry1[@]}"
+  do
+    echo
+    local actualValue=$(cat $EJB_CONFIG_WAS_SVN |sed 's/ //g' | grep $property | cut -d"|" -f4 | sed "s#$LOCAL_EJB_URL#$REMOTE_EJB_URL_WAS#g")
+    echo "Pridavam customProperty: $property s value: $actualValue"
+    echo "Je to v poriadku?(y/N)"
+    read adder
+    if [ "$adder" == "y" ] || [ "$adder" == "Y" ] || [ "$adder" == "yes" ] || [ "$adder" == "yES" ] || [ "$adder" == "Yes" ] || [ "$adder" == "YES" ] 
+    then
+      ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminConfig.create('J2EEResourceProperty', '(cells/$CELL|resources.xml#$J2EE_ENV_ENTRY)', '[[name \\\"$property\\\"] [type \\\"java.lang.String\\\"] [description \\\"Added $datum\\\"] [value \\\"$actualValue\\\"] [required \\\"false\\\"]]')\""
+    fi
+    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+  done
+  echo -e "$BLUE EJBconfigy boli pridane $NC"
+  read
+}
+
+addEJBCustomPropertyPortal(){
+  findJ2EEResourcePorpertyPortal
+  declare -a argAry1=("${!1}")
+  local datum=$(date '+%d-%m-%Y')
+  echo "" > tmpJython.py
+  
+  for property in "${argAry1[@]}"
+  do
+    echo
+    local actualValue=$(cat $EJB_CONFIG_PORTAL_SVN |sed 's/ //g' | grep $property | cut -d"|" -f4 | sed "s#$LOCAL_EJB_URL#$REMOTE_EJB_URL_PORTAL#g")
+    echo "Pridavam customProperty: $property s value: $actualValue"
+    echo "Je to v poriadku?(y/N)"
+    read adder
+    if [ "$adder" == "y" ] || [ "$adder" == "Y" ] || [ "$adder" == "yes" ] || [ "$adder" == "yES" ] || [ "$adder" == "Yes" ] || [ "$adder" == "YES" ] 
+    then
+      echo "AdminConfig.create('J2EEResourceProperty', '(cells/$CELL_PORTAL|resources.xml#$J2EE_ENV_ENTRY)', '[[name \"$property\"] [type \"java.lang.String\"] [description \"Added $datum\"] [value \"$actualValue\"] [required \"false\"]]')" >> tmpJython.py
+    fi
+    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+  done
+  echo "AdminConfig.save()" >> tmpJython.py
+  scp tmpJython.py $HOST_USER@$HOST_PORTAL:./
+  ssh $HOST_USER@$HOST_PORTAL "/opt/IBM/WebSphere/PortalServer/bin/wpscript.sh -lang jython -user $PORTAL_USER -password $PORTAL_PASS -f tmpJython.py "
+  
+  ssh $HOST_USER@$HOST_PORTAL "rm tmpJython.py"
+  rm tmpJython.py
+  echo -e "$BLUE EJBconfigy boli (snad) pridane $NC"
+  read
+}
+updateEJBCustomPropertyWAS(){
+  local EJB_CONGIF_FULL_FROM_RESOURCE_XML=$(ssh $HOST_USER@$HOST "cat $VIRTUAL_WAS/profiles/$PROFILE/config/cells/$CELL/resources.xml")
+  local datum=$(date '+%d-%m-%Y')
+  
+  declare -a argAry1=("${!1}")
+  for property in "${argAry1[@]}"
+  do
+    local remoteValue=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/value="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
+    local remoteJ2EEResourceProperty=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/xmi:id="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
+    echo
+    local actualValue=$(cat $EJB_CONFIG_WAS_SVN |sed 's/ //g' | grep $property | cut -d"|" -f4 | sed "s#$LOCAL_EJB_URL#$REMOTE_EJB_URL_WAS#g")
+    echo "Menim customProperty: $property"
+    echo "Stara hodnota: -$remoteValue-"
+    echo "Nova hodnota: -$actualValue-"
+    echo "Je to v poriadku?(y/N)"
+    read updater
+    if [ "$updater" == "y" ] || [ "$updater" == "Y" ] || [ "$updater" == "yes" ] || [ "$updater" == "yES" ] || [ "$updater" == "Yes" ] || [ "$updater" == "YES" ] 
+    then
+      ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminConfig.modify('(cells/$CELL|resources.xml#$remoteJ2EEResourceProperty)', '[[name \\\"$property\\\"] [type \\\"java.lang.String\\\"] [description \\\"Updated $datum\\\"] [value \\\"$actualValue\\\"] [required \\\"false\\\"]]')\""
+    fi
+  done
+  echo -e "$BLUE EJBconfigy boli Upravene $NC"
+  read
+}
+updateEJBCustomPropertyPortal(){
+  local EJB_CONGIF_FULL_FROM_RESOURCE_XML=$(ssh $HOST_USER@$HOST_PORTAL "cat $VIRTUAL_WAS/../wp_profile/config/cells/$CELL_PORTAL/resources.xml")
+  local datum=$(date '+%d-%m-%Y')
+  declare -a argAry1=("${!1}")
+  echo "" > tmpJython.py
+  for property in "${argAry1[@]}"
+  do
+    local remoteValue=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/value="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
+    local remoteJ2EEResourceProperty=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/xmi:id="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
+    echo
+    local actualValue=$(cat $EJB_CONFIG_PORTAL_SVN |sed 's/ //g' | grep $property | cut -d"|" -f4 | sed "s#$LOCAL_EJB_URL#$REMOTE_EJB_URL_PORTAL#g")
+    echo "Menim customProperty: $property"
+    echo "Stara hodnota: -$remoteValue-"
+    echo "Nova hodnota: -$actualValue-"
+    echo "Je to v poriadku?(y/N)"
+    read updater
+    if [ "$updater" == "y" ] || [ "$updater" == "Y" ] || [ "$updater" == "yes" ] || [ "$updater" == "yES" ] || [ "$updater" == "Yes" ] || [ "$updater" == "YES" ] 
+    then
+	echo "AdminConfig.modify('(cells/$CELL_PORTAL|resources.xml#$remoteJ2EEResourceProperty)', '[[name \"$property\"] [type \"java.lang.String\"] [description \"Updated $datum\"] [value \"$actualValue\"] [required \"false\"]]')" >> tmpJython.py
+    fi
+  done
+  echo "AdminConfig.save()" >> tmpJython.py
+  scp tmpJython.py $HOST_USER@$HOST_PORTAL:./
+  ssh $HOST_USER@$HOST_PORTAL "/opt/IBM/WebSphere/PortalServer/bin/wpscript.sh -lang jython -user $PORTAL_USER -password $PORTAL_PASS -f tmpJython.py "
+  
+  ssh $HOST_USER@$HOST_PORTAL "rm tmpJython.py"
+  rm tmpJython.py
+  echo -e "$BLUE EJBconfigy boli (snad) upravene $NC"
+  read
+}
+removeEJBCustomPropertyWAS(){
+  local EJB_CONGIF_FULL_FROM_RESOURCE_XML=$(ssh $HOST_USER@$HOST "cat $VIRTUAL_WAS/profiles/$PROFILE/config/cells/$CELL/resources.xml")
+  
+  declare -a argAry1=("${!1}")
+  for property in "${argAry1[@]}"
+  do
+    local remoteValue=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/value="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
+    local remoteJ2EEResourceProperty=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/xmi:id="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
+    echo
+    echo "Mazem customProperty: $property"
+    echo "Stara hodnota: -$remoteValue-"
+    echo "Je to v poriadku?(y/N)"
+    read deleter
+    if [ "$deleter" == "y" ] || [ "$deleter" == "Y" ] || [ "$deleter" == "yes" ] || [ "$deleter" == "yES" ] || [ "$deleter" == "Yes" ] || [ "$deleter" == "YES" ] 
+    then
+      ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminConfig.remove('(cells/$CELL|resources.xml#$remoteJ2EEResourceProperty)')\""
+    fi
+  done
+  echo -e "$BLUE EJBconfigy boli Zmazane $NC"
+  read
+}
+removeEJBCustomPropertyPortal(){
+  local EJB_CONGIF_FULL_FROM_RESOURCE_XML=$(ssh $HOST_USER@$HOST_PORTAL "cat $VIRTUAL_WAS/../wp_profile/config/cells/$CELL_PORTAL/resources.xml")
+  declare -a argAry1=("${!1}")
+  echo "" > tmpJython.py
+  for property in "${argAry1[@]}"
+  do
+    local remoteValue=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/value="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
+    local remoteJ2EEResourceProperty=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/xmi:id="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
+    echo
+    echo "Mazem customProperty: $property"
+    echo "Stara hodnota: -$remoteValue-"
+    echo "Je to v poriadku?(y/N)"
+    read deleter
+    if [ "$deleter" == "y" ] || [ "$deleter" == "Y" ] || [ "$deleter" == "yes" ] || [ "$deleter" == "yES" ] || [ "$deleter" == "Yes" ] || [ "$deleter" == "YES" ] 
+    then
+	echo "AdminConfig.remove('(cells/$CELL_PORTAL|resources.xml#$remoteJ2EEResourceProperty)')" >> tmpJython.py
+    fi
+  done
+  echo "AdminConfig.save()" >> tmpJython.py
+  scp tmpJython.py $HOST_USER@$HOST_PORTAL:./
+  ssh $HOST_USER@$HOST_PORTAL "/opt/IBM/WebSphere/PortalServer/bin/wpscript.sh -lang jython -user $PORTAL_USER -password $PORTAL_PASS -f tmpJython.py "
+  
+  ssh $HOST_USER@$HOST_PORTAL "rm tmpJython.py"
+  rm tmpJython.py
+  echo -e "$BLUE EJBconfigy boli (snad) zmazane $NC"
+  read
+}
+
+addEJBCustomProperty(){
+  clear
+  if [ "$2" == "portal" ] 
+  then
+    addEJBCustomPropertyPortal $1
+  else
+    addEJBCustomPropertyWAS $1
+  fi
+  
+}
+
+updateEJBCustomProperty(){
+  clear
+  if [ "$2" == "portal" ] 
+  then
+    updateEJBCustomPropertyPortal $1
+  else
+    updateEJBCustomPropertyWAS $1
+  fi
+}
+removeEJBCustomProperty(){
+  clear
+  if [ "$2" == "portal" ] 
+  then
+    removeEJBCustomPropertyPortal $1
+  else
+    removeEJBCustomPropertyWAS $1
+  fi
+}
+checkIfAnotherUserIsConnected(){
+  if [ "$(ps aux | grep "wasControl" |grep "bash" | wc -l )" -gt "3" ] 
+  then 
+    echo "1"
+  else 
+    echo "0" 
+  fi
+
+}
+
 checkIfNewVersionAvailable(){
   local targetVersionOfScript=$(wget -qO- http://andreus.valec.net/wasControlNews | cat | grep "Verzia" | cut -d ":" -f2 | sed 's/ //g')
   if [ "$targetVersionOfScript" == "$ACTUAL_SCRIPT_VERSION" ]
@@ -1437,30 +1806,6 @@ echo "			    :::::::::..     .:::::::::'"
 echo "			     \`:::::::::88888:::::::'"
 echo "			        rs\`:::'       \`:'"
 read
-}
-
-ejbMenu(){
-  clear
-  
-  EJB_CONFIG_WAS_SVN="$ISIS_DEVEL/ejbConfigWas.txt"
-  EJB_CONFIG_PORTAL_SVN="$ISIS_DEVEL/ejbConfigPortal.txt"
-  
-  echo "1. Skontrolovat EJB config WAS		"
-  echo "2. Skontrolovat EJB config PORTAL	"
-  echo "								0. back"
-  echo "							       00. exit"
-  echo -n "Vyber moznost: "
-  read ejbMenuOption;
-  case $ejbMenuOption in
-    1 ) controlEJBCustomProperties "was"; ejbMenu  ;;
-    2 ) controlEJBCustomProperties "portal"; ejbMenu  ;;
-    3 ) createEjbCustomPropFile; ejbMenu  ;;
-    4 ) createEjbCustomPropFilePortal; ejbMenu ;;
-    0) clear; welcome ;;
-    00) clear; exit ;;
-    "")  ;;
-    *) clear; echo "Chybne zadany vstup"; sleep 1; ejbMenu ;;
-  esac
 }
 
 controlEJBCustomProperties(){
@@ -1572,402 +1917,58 @@ controlEJBCustomProperties(){
   esac
 }
 
-findJ2EEResourcePorpertyWAS(){
-  let LINE_NUM=$(ssh $HOST_USER@$HOST "cat $VIRTUAL_WAS/profiles/$PROFILE/config/cells/$CELL/resources.xml | grep 'RemoteEJBLocatorReference' -n | cut -d ':' -f1")
-  let "LINE_NUM_1=$(echo $LINE_NUM) +1"
-  J2EE_ENV_ENTRY=$(ssh $HOST_USER@$HOST "cat $VIRTUAL_WAS/profiles/$PROFILE/config/cells/$CELL/resources.xml | sed -n "$(echo $LINE_NUM_1)p" | cut -d'\"' -f2 ")
-}
-
-findJ2EEResourcePorpertyPortal(){
-  let LINE_NUM=$(ssh $HOST_USER@$HOST_PORTAL "cat $VIRTUAL_WAS/../wp_profile/config/cells/$CELL_PORTAL/resources.xml | grep 'RemoteEJBLocatorReference' -n | cut -d ':' -f1")
-  let "LINE_NUM_1=$(echo $LINE_NUM) +1"
-  J2EE_ENV_ENTRY=$(ssh $HOST_USER@$HOST_PORTAL "cat $VIRTUAL_WAS/../wp_profile/config/cells/$CELL_PORTAL/resources.xml | sed -n "$(echo $LINE_NUM_1)p" | cut -d'\"' -f2 ")
-}
-
-createEjbCustomPropFile(){
-  vi $EJB_CONFIG_WAS_SVN
-}
-
-createEjbCustomPropFilePortal(){
-  vi $EJB_CONFIG_PORTAL_SVN
-}
-
-addEJBCustomPropertyWAS(){
-  findJ2EEResourcePorpertyWAS
-  declare -a argAry1=("${!1}")
-  local datum=$(date '+%d-%m-%Y')
-  
-  for property in "${argAry1[@]}"
-  do
-    echo
-    local actualValue=$(cat $EJB_CONFIG_WAS_SVN |sed 's/ //g' | grep $property | cut -d"|" -f4 | sed "s#$LOCAL_EJB_URL#$REMOTE_EJB_URL_WAS#g")
-    echo "Pridavam customProperty: $property s value: $actualValue"
-    echo "Je to v poriadku?(y/N)"
-    read adder
-    if [ "$adder" == "y" ] || [ "$adder" == "Y" ] || [ "$adder" == "yes" ] || [ "$adder" == "yES" ] || [ "$adder" == "Yes" ] || [ "$adder" == "YES" ] 
-    then
-      ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminConfig.create('J2EEResourceProperty', '(cells/$CELL|resources.xml#$J2EE_ENV_ENTRY)', '[[name \\\"$property\\\"] [type \\\"java.lang.String\\\"] [description \\\"Added $datum\\\"] [value \\\"$actualValue\\\"] [required \\\"false\\\"]]')\""
-    fi
-    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-  done
-  echo -e "$BLUE EJBconfigy boli pridane $NC"
-  read
-}
-
-addEJBCustomPropertyPortal(){
-  findJ2EEResourcePorpertyPortal
-  declare -a argAry1=("${!1}")
-  local datum=$(date '+%d-%m-%Y')
-  echo "" > tmpJython.py
-  
-  for property in "${argAry1[@]}"
-  do
-    echo
-    local actualValue=$(cat $EJB_CONFIG_PORTAL_SVN |sed 's/ //g' | grep $property | cut -d"|" -f4 | sed "s#$LOCAL_EJB_URL#$REMOTE_EJB_URL_PORTAL#g")
-    echo "Pridavam customProperty: $property s value: $actualValue"
-    echo "Je to v poriadku?(y/N)"
-    read adder
-    if [ "$adder" == "y" ] || [ "$adder" == "Y" ] || [ "$adder" == "yes" ] || [ "$adder" == "yES" ] || [ "$adder" == "Yes" ] || [ "$adder" == "YES" ] 
-    then
-      echo "AdminConfig.create('J2EEResourceProperty', '(cells/$CELL_PORTAL|resources.xml#$J2EE_ENV_ENTRY)', '[[name \"$property\"] [type \"java.lang.String\"] [description \"Added $datum\"] [value \"$actualValue\"] [required \"false\"]]')" >> tmpJython.py
-    fi
-    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-  done
-  echo "AdminConfig.save()" >> tmpJython.py
-  scp tmpJython.py $HOST_USER@$HOST_PORTAL:./
-  ssh $HOST_USER@$HOST_PORTAL "/opt/IBM/WebSphere/PortalServer/bin/wpscript.sh -lang jython -user $PORTAL_USER -password $PORTAL_PASS -f tmpJython.py "
-  
-  ssh $HOST_USER@$HOST_PORTAL "rm tmpJython.py"
-  rm tmpJython.py
-  echo -e "$BLUE EJBconfigy boli pridane $NC"
-  read
-}
-
-updateEJBCustomPropertyWAS(){
-  local EJB_CONGIF_FULL_FROM_RESOURCE_XML=$(ssh $HOST_USER@$HOST "cat $VIRTUAL_WAS/profiles/$PROFILE/config/cells/$CELL/resources.xml")
-  local datum=$(date '+%d-%m-%Y')
-  
-  declare -a argAry1=("${!1}")
-  for property in "${argAry1[@]}"
-  do
-    local remoteValue=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/value="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
-    local remoteJ2EEResourceProperty=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/xmi:id="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
-    echo
-    local actualValue=$(cat $EJB_CONFIG_WAS_SVN |sed 's/ //g' | grep $property | cut -d"|" -f4 | sed "s#$LOCAL_EJB_URL#$REMOTE_EJB_URL_WAS#g")
-    echo "Menim customProperty: $property"
-    echo "Stara hodnota: -$remoteValue-"
-    echo "Nova hodnota: -$actualValue-"
-    echo "Je to v poriadku?(y/N)"
-    read updater
-    if [ "$updater" == "y" ] || [ "$updater" == "Y" ] || [ "$updater" == "yes" ] || [ "$updater" == "yES" ] || [ "$updater" == "Yes" ] || [ "$updater" == "YES" ] 
-    then
-      ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminConfig.modify('(cells/$CELL|resources.xml#$remoteJ2EEResourceProperty)', '[[name \\\"$property\\\"] [type \\\"java.lang.String\\\"] [description \\\"Updated $datum\\\"] [value \\\"$actualValue\\\"] [required \\\"false\\\"]]')\""
-    fi
-  done
-  echo -e "$BLUE EJBconfigy boli Upravene $NC"
-  read
-}
-
-updateEJBCustomPropertyPortal(){
-  local EJB_CONGIF_FULL_FROM_RESOURCE_XML=$(ssh $HOST_USER@$HOST_PORTAL "cat $VIRTUAL_WAS/../wp_profile/config/cells/$CELL_PORTAL/resources.xml")
-  local datum=$(date '+%d-%m-%Y')
-  declare -a argAry1=("${!1}")
-  echo "" > tmpJython.py
-  for property in "${argAry1[@]}"
-  do
-    local remoteValue=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/value="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
-    local remoteJ2EEResourceProperty=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/xmi:id="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
-    echo
-    local actualValue=$(cat $EJB_CONFIG_PORTAL_SVN |sed 's/ //g' | grep $property | cut -d"|" -f4 | sed "s#$LOCAL_EJB_URL#$REMOTE_EJB_URL_PORTAL#g")
-    echo "Menim customProperty: $property"
-    echo "Stara hodnota: -$remoteValue-"
-    echo "Nova hodnota: -$actualValue-"
-    echo "Je to v poriadku?(y/N)"
-    read updater
-    if [ "$updater" == "y" ] || [ "$updater" == "Y" ] || [ "$updater" == "yes" ] || [ "$updater" == "yES" ] || [ "$updater" == "Yes" ] || [ "$updater" == "YES" ] 
-    then
-	echo "AdminConfig.modify('(cells/$CELL_PORTAL|resources.xml#$remoteJ2EEResourceProperty)', '[[name \"$property\"] [type \"java.lang.String\"] [description \"Updated $datum\"] [value \"$actualValue\"] [required \"false\"]]')" >> tmpJython.py
-    fi
-  done
-  echo "AdminConfig.save()" >> tmpJython.py
-  scp tmpJython.py $HOST_USER@$HOST_PORTAL:./
-  ssh $HOST_USER@$HOST_PORTAL "/opt/IBM/WebSphere/PortalServer/bin/wpscript.sh -lang jython -user $PORTAL_USER -password $PORTAL_PASS -f tmpJython.py "
-  
-  ssh $HOST_USER@$HOST_PORTAL "rm tmpJython.py"
-  rm tmpJython.py
-  echo -e "$BLUE EJBconfigy boli upravene $NC"
-  read
-}
-
-removeEJBCustomPropertyWAS(){
-  local EJB_CONGIF_FULL_FROM_RESOURCE_XML=$(ssh $HOST_USER@$HOST "cat $VIRTUAL_WAS/profiles/$PROFILE/config/cells/$CELL/resources.xml")
-  
-  declare -a argAry1=("${!1}")
-  for property in "${argAry1[@]}"
-  do
-    local remoteValue=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/value="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
-    local remoteJ2EEResourceProperty=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/xmi:id="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
-    echo
-    echo "Mazem customProperty: $property"
-    echo "Stara hodnota: -$remoteValue-"
-    echo "Je to v poriadku?(y/N)"
-    read deleter
-    if [ "$deleter" == "y" ] || [ "$deleter" == "Y" ] || [ "$deleter" == "yes" ] || [ "$deleter" == "yES" ] || [ "$deleter" == "Yes" ] || [ "$deleter" == "YES" ] 
-    then
-      ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminConfig.remove('(cells/$CELL|resources.xml#$remoteJ2EEResourceProperty)')\""
-    fi
-  done
-  echo -e "$BLUE EJBconfigy boli Zmazane $NC"
-  read
-}
-
-removeEJBCustomPropertyPortal(){
-  local EJB_CONGIF_FULL_FROM_RESOURCE_XML=$(ssh $HOST_USER@$HOST_PORTAL "cat $VIRTUAL_WAS/../wp_profile/config/cells/$CELL_PORTAL/resources.xml")
-  declare -a argAry1=("${!1}")
-  echo "" > tmpJython.py
-  for property in "${argAry1[@]}"
-  do
-    local remoteValue=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/value="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
-    local remoteJ2EEResourceProperty=$( echo "$EJB_CONGIF_FULL_FROM_RESOURCE_XML" | grep "$property"  | sed 's/xmi:id="/#/'| cut -d"#" -f2 | cut -d"\"" -f1)
-    echo
-    echo "Mazem customProperty: $property"
-    echo "Stara hodnota: -$remoteValue-"
-    echo "Je to v poriadku?(y/N)"
-    read deleter
-    if [ "$deleter" == "y" ] || [ "$deleter" == "Y" ] || [ "$deleter" == "yes" ] || [ "$deleter" == "yES" ] || [ "$deleter" == "Yes" ] || [ "$deleter" == "YES" ] 
-    then
-	echo "AdminConfig.remove('(cells/$CELL_PORTAL|resources.xml#$remoteJ2EEResourceProperty)')" >> tmpJython.py
-    fi
-  done
-  echo "AdminConfig.save()" >> tmpJython.py
-  scp tmpJython.py $HOST_USER@$HOST_PORTAL:./
-  ssh $HOST_USER@$HOST_PORTAL "/opt/IBM/WebSphere/PortalServer/bin/wpscript.sh -lang jython -user $PORTAL_USER -password $PORTAL_PASS -f tmpJython.py "
-  
-  ssh $HOST_USER@$HOST_PORTAL "rm tmpJython.py"
-  rm tmpJython.py
-  echo -e "$BLUE EJBconfigy boli zmazane $NC"
-  read
-}
-
-addEJBCustomProperty(){
+ejbMenu(){
   clear
-  if [ "$2" == "portal" ] 
-  then
-    addEJBCustomPropertyPortal $1
-  else
-    addEJBCustomPropertyWAS $1
-  fi
   
-}
-
-updateEJBCustomProperty(){
-  clear
-  if [ "$2" == "portal" ] 
-  then
-    updateEJBCustomPropertyPortal $1
-  else
-    updateEJBCustomPropertyWAS $1
-  fi
-}
-
-removeEJBCustomProperty(){
-  clear
-  if [ "$2" == "portal" ] 
-  then
-    removeEJBCustomPropertyPortal $1
-  else
-    removeEJBCustomPropertyWAS $1
-  fi
-}
-restartMachine(){
-  ssh $HOST_USER@$1 "/root/bin/was-control.sh restart" 
-}
-startMachine(){
-  ssh $HOST_USER@$1 "/root/bin/was-control.sh start"
-}
-stopMachine(){
-  ssh $HOST_USER@$1 "/root/bin/was-control.sh stop"
-}
-machineControl(){
-  case $1 in
-    *1* ) startMachine $HOST; machineControl $(echo $1|tr -d '1') ;;
-    *2* ) startMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '2') ;;
-    *3* ) stopMachine $HOST; machineControl $(echo $1|tr -d '3') ;;
-    *4* ) stopMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '4') ;;
-    *5* ) restartMachine $HOST; machineControl $(echo $1|tr -d '5') ;;
-    *6* ) restartMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '6') ;;
-    *7* ) startMachine $HOST;
-	  startMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '7') ;;
-    *8* ) stopMachine $HOST;
-	  stopMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '8') ;;
-    *9* ) restartMachine $HOST;
-	  restartMachine $HOST_PORTAL; machineControl $(echo $1|tr -d '9') ;;
+  EJB_CONFIG_WAS_SVN="$ISIS_DEVEL/ejbConfigWas.txt"
+  EJB_CONFIG_PORTAL_SVN="$ISIS_DEVEL/ejbConfigPortal.txt"
+  
+  echo "1. Skontrolovat EJB config WAS		"
+  echo "2. Skontrolovat EJB config PORTAL	"
+  echo "								0. back"
+  echo "							       00. exit"
+  echo -n "Vyber moznost: "
+  read ejbMenuOption;
+  case $ejbMenuOption in
+    1 ) controlEJBCustomProperties "was"; ejbMenu  ;;
+    2 ) controlEJBCustomProperties "portal"; ejbMenu  ;;
+    3 ) createEjbCustomPropFile; ejbMenu  ;;
+    4 ) createEjbCustomPropFilePortal; ejbMenu ;;
     0) clear; welcome ;;
     00) clear; exit ;;
     "")  ;;
-    *) clear; echo "Chybne zadany vstup"; sleep 1; chooseControl ;;
+    *) clear; echo "Chybne zadany vstup"; sleep 1; ejbMenu ;;
   esac
 }
-
-
-chooseControl() {
-  echo "1. Start Devel server(was) 		2. Start Portal server	"
-  echo "3. Vypnut Devel server			4. Vypnut Portal server	"
-  echo "5. Restart Devel server			6. Restart Portal server"
+configureMenu(){
+  echo "1. Otestuj default hodnoty 		2. Nastav cesty 	"
+  echo "3. Premaz build.log			4. Premaz deploy.log	"
+  echo "5. Nastav aktualne verzie		6. Nastav deploy skripty"
+  echo "7. Automaticky update scriptu		8. Nastav build nastavenia"
+  echo "9. Konfiguracia EJB"
   echo ""
-  echo "7. Start oboch serverov			8. Vypnut oba servery"
-  echo "9. Restart oboch serverov"
+  echo "w. What's new				a. About"
   echo "								0. back"
   echo "							       00. exit"
-  echo -n "Vyber moznost(i): "
-  read controlOption;
+  echo -n "Vyber moznost: "
+  read configureOption;
 
-  machineControl $controlOption 
-  
-  echo
-  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
-  read
-}
-svnUpdate(){
-  
-  cd $COMMON_DEVEL 
-  svn update
-  
-  cd $ISIS_DEVEL
-  svn update
-  
-  cd $LOCAL_DIR
-  echo
-  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
-  read
-}
-svnBranchUpdate(){
-  cd $COMMON_DEVEL_BRANCH 
-  svn update
-  
-  cd $ISIS_DEVEL_BRANCH
-  svn update
-  
-  cd $LOCAL_DIR
-  echo
-  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
-  read
-}
-selfUpdate(){
-  cd $LOCAL_DIR
-  wget -c http://andreus.valec.net/wasControlUpdate.sh
-
-  SCRIPT_NAME=$(basename $0)
-  POINTER="$( cat $SCRIPT_NAME | grep 'SELF UPDATE POINTER' -m1 -n| cut -d':' -f1 )"
-  POINTER_NEW="$( cat wasControlUpdate.sh | grep 'SELF UPDATE POINTER' -m1 -n| cut -d':' -f1 )"
-  SCRIPT_SIZE_NEW="$( cat wasControlUpdate.sh | wc -l)"
-  let "POINTERPLUS_NEW= $POINTER_NEW + 1"
-
-  sed "1,$POINTER!d" $SCRIPT_NAME > HEAD.TILE
-  sed "$POINTERPLUS_NEW,$SCRIPT_SIZE_NEW!d" wasControlUpdate.sh > TAIL.TILE
-
-  cat HEAD.TILE TAIL.TILE > newWasControl.sh
-
-  rm wasControlUpdate.sh HEAD.TILE TAIL.TILE
-  mv newWasControl.sh $SCRIPT_NAME
-  chmod +x $SCRIPT_NAME
-  cd $LOCAL_DIR
-  bash $(basename $0)
-  exit
-}
-
-setDeployScript(){
-  clear
-  
-  REL_PATH_SCRIPT=$(cat $ISIS_DEVEL/Metis/Gui/src/main/scripts/portaldevel_deploy_war.sh | grep 'SCRIPT_REL_PATH=')
-  REL_PATH=$(echo $REL_PATH_SCRIPT | cut -d '"' -f2)
-  
-  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_ERSION/g $ISIS_DEVEL/Metis/Gui/src/main/scripts/deployScript.sh
-  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $ISIS_DEVEL/Metis/Gui/src/main/scripts/deployMetisGuiWar.sh
-  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $ISIS_DEVEL/Metis/Gui/src/main/scripts/portaldevel_deploy_war.sh
-  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $ISIS_DEVEL/Metis/Gui/src/main/scripts/update.xmlaccess
-  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $ISIS_DEVEL/Zber/Gui/src/main/scripts/portaldevel_deploy_war.sh
-  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/update.xmlaccess"
-  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/ZBER/update.xmlaccess"
-  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/ZBD/update.xmlaccess"
-  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/IAM/update.xmlaccess"
-  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/LogApp/update.xmlaccess"
-  ssh $HOST_USER@$HOST_PORTAL "sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$SETUP_VERSION/g $SCRIPT_REL_PATH/ISIS_GUI/update.xmlaccess"
-  
-  
-  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$ACTUAL_VERSION/g $ISIS_DEVEL/Metis/Ear/deploy_ear.sh
-  sed -i -r s/'[0-9]+.[0-9]+\.[0-9]+'/$ACTUAL_VERSION/g $ISIS_DEVEL/Metis/Ear/wasdevel_deploy_ear.sh
-  
-  echo "Update scriptov prebehol"
-  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
-  read
-}
-
-
-
-removeOldJars(){
-
-  let "OLD_VERSION = $(echo $SETUP_VERSION | cut -d"." -f2 ) -1"
-  RMIAMSECURITY="$VIRTUAL_PORTAL/shared/ext/IsisSecurityProject-*.jar"
-  RMIAMLOGINFACADE="$VIRTUAL_PORTAL/shared/ext/IamBusinessServiceFacadeForCustomLoginProject-*.jar"
-  RMIAMLOGIN="$VIRTUAL_PORTAL/shared/ext/IamAuthCustomLoginModuleProject-*.jar"
-  RMCOMMONUTILS="$VIRTUAL_WAS/lib/ext/CommonUtilsProject-*.jar"
-  RMEJBPORTAL="$VIRTUAL_WAS/lib/ext/EjbConfigProject-*.jar"
-  RMEJBWAS="$VIRTUAL_WAS/lib/ext/EjbConfigProject-*.jar"
-  RMCOMMONUTILSWAS="$VIRTUAL_WAS/lib/ext/CommonUtilsProject-*.jar"
-  echo "Navrhujem mazat veci:"
-  echo $RMIAMSECURITY;
-  echo $RMIAMLOGINFACADE;
-  echo $RMIAMLOGIN;
-  echo $RMCOMMONUTILS;
-  echo $RMEJBPORTAL;
-  echo $RMEJBWAS;
-  echo $RMCOMMONUTILSWAS;
-  echo
-  echo "Je to v poriadku?(y/N)"
-  read remover
-  if [ "$remover" == "y" ] || [ "$remover" == "Y" ] || [ "$remover" == "yes" ] || [ "$remover" == "yES" ] || [ "$remover" == "Yes" ] || [ "$remover" == "YES" ] 
-  then
-    echo "Mazem"
-    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMSECURITY"
-    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMLOGINFACADE"
-    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMLOGIN"
-    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMCOMMONUTILS"
-    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMEJBPORTAL"
-    ssh $HOST_USER@$HOST "rm -fvr $RMCOMMONUTILSWASL"
-    ssh $HOST_USER@$HOST "rm -fvr $RMEJBWAS"
-    ssh $HOST_USER@$HOST "rm -fvr $RMCOMMONUTILSWAS"
-    #for toRM in $(ls *.$OLD_VERSION.0.jar) 
-    #do 
-    #  rm -fv $toRM
-    #done
-  else
-    echo "ok :("
-  fi
-}
-
-sendJars(){
-
-  removeOldJars
-  echo  
-  echo 'Sending ...'
-  scp $ISIS_DEVEL/IsisCommon/IsisSecurity/target/IsisSecurityProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/ext/
-  echo '...'
-  scp $ISIS_DEVEL/Iam/Business/ServiceFacadeForCustomLogin/target/IamBusinessServiceFacadeForCustomLoginProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/ext/
-  echo '...'
-  scp $ISIS_DEVEL/Iam$BRANCH_SFX/Auth/CustomLoginModule/target/IamAuthCustomLoginModuleProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/ext/
-  echo '...'
-  scp $COMMON_DEVEL/CommonUtils/target/CommonUtilsProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_WAS/lib/ext/
-  echo '...'
-  scp $COMMON_DEVEL/CommonUtils/target/CommonUtilsProject-$SETUP_VERSION.jar $HOST_USER@$HOST:$VIRTUAL_WAS/lib/ext/
-  echo '...'
-  scp $COMMON_DEVEL/EjbConfig/target/EjbConfigProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_WAS/lib/ext/
-  echo '...'  
-  scp $COMMON_DEVEL/EjbConfig/target/EjbConfigProject-$SETUP_VERSION.jar $HOST_USER@$HOST:$VIRTUAL_WAS/lib/ext/
-  echo '...'
-  echo
-  echo -e "$BLUE Stlac enter pre pokracovanie $NC"
-  read
+  case $configureOption in 
+    1)  checkForFiles ;;
+    2)  setPaths ;;
+    3)  echo "" > $BUILD_LOG;;
+    4)  echo "" > $DEPLOY_LOG;;
+    5)  setVersions;;
+    6) 	setDeployScript ;;
+    7)  selfUpdate ;;
+    8) setBuildOptions ;;
+    9) ejbMenu ;;
+    w) whatIsNew ;;
+    a) about ;;
+    0) clear; welcome ;;
+    00) clear; exit ;;
+    *) clear; echo "Chybne zadany vstup"; sleep 1; configureMenu ;;
+  esac
 }
 
 function welcome {
@@ -1993,6 +1994,10 @@ function welcome {
   echo "/___/_____/_/  /_/     |__/|__/\___/_.___/____/ .___/_/ /_/\___/_/   \___/ "
   echo "                                             /_/                           "
   echo ""
+  #if [ "$(checkIfAnotherUserIsConnected)" == "1" ]
+  #then
+  #  echo -e "                 $RED WasControl pouziva iny pouzivatel!$NC (w)"
+  #fi 
   
   echo
   echo
