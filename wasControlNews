@@ -1,0 +1,51 @@
+Verzia:2.5
+ 
+  22.08.2014:
+  ----------------------------------------------------------------------------
+  * Version 2.2
+  *  Upraveny deploy KRAZ potrebne pridat: 
+  *  KRAZ12="Intrastat Gui"
+     KRAZ13="IntratstatGui-$SETUP_VERSION.war"
+  
+  03.09.2014:
+  ----------------------------------------------------------------------------
+  * Version 2.3
+  *  Upraveny deploy KRAZ (ne)potrebne odstranit: 
+  *  KRAZ12="Intrastat Gui"
+     KRAZ13="IntratstatGui-$SETUP_VERSION.war"
+  
+  08.09.2014:
+  ----------------------------------------------------------------------------
+  * Version 2.4
+  *  Pridany deploy KRAZ-MOCK, potrebne pridat:    
+  *  KRAZ_MOCK_1="Kraz2$BRANCH_SFX/Ear-mock/target/Kraz.ear"
+     KRAZ_MOCK_2="Kraz.ear"
+     KRAZ_MOCK_3="Kraz"
+     KRAZ_MOCK_4="KrazBusinessServiceImpl-mock-$SETUP_VERSION.jar"
+     KRAZ_MOCK_5="KrazBusinessServiceImpl-mock-$SETUP_VERSION.jar"
+     KRAZ_MOCK_6="Kraz Gui"
+     KRAZ_MOCK_7="KrazGui-$SETUP_VERSION.war"
+     
+  16.09.2014:
+  ----------------------------------------------------------------------------
+  * Version 2.5
+  * Pridany deploy Intrastat a Intrastat-mock, potrebne pridat: 
+    #INTRASTAT
+    INTR1="Intrastat$BRANCH_SFX/Ear/target/Intrastat.ear"
+    INTR2="Intrastat.ear"
+    INTR3="Intrastat"
+    INTR4="IntrastatCoreDaoImpl-$SETUP_VERSION.jar"
+    INTR5="IntrastatCoreDaoImpl-$SETUP_VERSION.jar"
+    INTR6="IntrastatBusinessServiceImpl-$SETUP_VERSION.jar"
+    INTR7="IntrastatBusinessServiceImpl-$SETUP_VERSION.jar"
+    INTR8="Intrastat Gui"
+    INTR9="IntrastatGui-$SETUP_VERSION.war"
+
+    #INTRASTAT_MOCK
+    INTR_MOCK_1="Intrastat$BRANCH_SFX/Ear-mock/target/Intrastat.ear"
+    INTR_MOCK_2="Intrastat.ear"
+    INTR_MOCK_3="Intrastat"
+    INTR_MOCK_4="IntrastatBusinessServiceImpl-mock-$SETUP_VERSION.jar"
+    INTR_MOCK_5="IntrastatBusinessServiceImpl-mock-$SETUP_VERSION.jar"
+    INTR_MOCK_6="Intrastat Gui"
+    INTR_MOCK_7="IntrastatGui-$SETUP_VERSION.war"
