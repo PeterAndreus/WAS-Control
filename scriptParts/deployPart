@@ -139,6 +139,27 @@ preDeploy(){
   esac
 }
 
+genericDeploy(){  
+  ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema $3]' ) \"" 
+}
+
+genericPreDeploy(){
+local modulesToServersName=("${!1}")
+local modulesToServersValues=("${!2}")
+  for t in "${modulesToServersName[@]}"
+  do
+    echo $t
+  done
+
+  if [ "$CLUSTER" == "" ]
+  then
+    ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema $3]' ) \"" 
+  else
+    echo "doploying using CLUSTER"
+    ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,META-INF/ejb-jar.xml WebSphere:cell=$CELL,cluster=$CLUSTER ][ \\\"$5\\\" $6,META-INF/ejb-jar.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER ][ \\\"$7\\\" $8,WEB-INF/web.xml WebSphere:cell=$CELL,cluster=$CLUSTER ]]]' ) \""
+  fi
+}
+
 deployKraz(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
    echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$KRAZ1 $NC"
@@ -155,6 +176,9 @@ deployIntrastat(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
    echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$INTR1 $NC"
    preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$INTR1" "$INTR2" "09" "$INTR3" "$INTR4" "$INTR5" "$INTR6" "$INTR7" "$INTR8" "$INTR9"
+   
+   local  modulesToServersName=("$INTR4", "$INTR6",  "$INTR8")
+   local  modulesToServersValues=("$INTR5", "$INTR7",  "$INTR9")
 }
 
 deployIntrastatMock(){  
