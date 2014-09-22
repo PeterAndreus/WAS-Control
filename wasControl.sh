@@ -74,16 +74,16 @@ REMOTE_EJB_URL_WASDEFAULT="wasdevel:9813:cell/nodes/wasdevelNode01/servers/wasde
 BRANCH_BUILD="1"							# Povolit build z branchu/tagu/trunku
 
 #Buildenie z Branchu
-LAST_VERSION_NUMBER="0"							# Minoritna verzia
-BRANCH_VERSION="1.19"							# Majoritna  verzia
+LAST_VERSION_NUMBER="3"							# Minoritna verzia
+BRANCH_VERSION="1.17"							# Majoritna  verzia
 ISIS_DEVEL_BRANCH="$SVN/Isis.devel/branches/$BRANCH_VERSION.x"		# Cesta k ISIS branch v SVN
 COMMON_DEVEL_BRANCH="$SVN/Common.devel/branches/$BRANCH_VERSION.x"	# Cesta k Common branch v SVN
 BRANCH_SFX=""								# neMetis branch suffix
 
 
 #Buildenie z Tag
-LAST_TAG_VERSION_NUMBER="0"							# Minoritna verzia
-TAG_VERSION="1.19"								# Majoritna verzia
+LAST_TAG_VERSION_NUMBER="1"							# Minoritna verzia
+TAG_VERSION="1.14"								# Majoritna verzia
 ISIS_DEVEL_TAG="$SVN/Isis.devel/tags/$TAG_VERSION.$LAST_TAG_VERSION_NUMBER"	# Cesta k ISIS branch v SVN
 COMMON_DEVEL_TAG="$SVN/Common.devel/tags/$TAG_VERSION.$LAST_TAG_VERSION_NUMBER"	# Cesta k Common branch v SVN
 
@@ -627,230 +627,186 @@ configureMenu(){
   esac
 }
 
-dep01() {
-if [ "$CLUSTER" == "" ]
-then
-  ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,META-INF/ejb-jar.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER ][ \\\"$5\\\" $6,META-INF/ejb-jar.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER ]]]' ) \""
-else
-  echo "doploying using CLUSTER"
-  ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,META-INF/ejb-jar.xml WebSphere:cell=$CELL,cluster=$CLUSTER ][ \\\"$5\\\" $6,META-INF/ejb-jar.xml WebSphere:cell=$CELL,cluster=$CLUSTER ]]]' ) \""
-fi
-
-
+genericDeploy(){  
+  ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema $3]' ) \"" 
 }
 
-dep02() {
-if [ "$CLUSTER" == "" ]
-then
-  ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,META-INF/ejb-jar.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER ]]]' ) \""
-else
-  echo "doploying using CLUSTER"
-  ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,META-INF/ejb-jar.xml WebSphere:cell=$CELL,cluster=$CLUSTER ]]]' ) \""
-fi
+genericPreDeploy(){
 
-}
+  echo "- UPLOADING ${1}"
+  upload "$ISIS_DEVEL/${1}" "$EAR_REMOTE_DIR/${2}"
 
-dep03() {
-if [ "$CLUSTER" == "" ]
-then
-  ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,WEB-INF/web.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER ]] -MapWebModToVH [[ \\\"$3\\\" $4,WEB-INF/web.xml default_host ]]]' ) \""
-else
-  echo "doploying using CLUSTER"
-  ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,WEB-INF/web.xml WebSphere:cell=$CELL,cluster=$CLUSTER ]] -MapWebModToVH [[ \\\"$3\\\" $4,WEB-INF/web.xml default_host ]]]' ) \""
-fi
-
-}
-
-dep04() {
-if [ "$CLUSTER" == "" ]
-then
-  ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,META-INF/ejb-jar.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER ][ \\\"$5\\\" $6,WEB-INF/web.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER ]] -MapWebModToVH [[ \\\"$5\\\" $6,WEB-INF/web.xml default_host ]]]' ) \"" 
-else
-  echo "doploying using CLUSTER"
-  ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,META-INF/ejb-jar.xml WebSphere:cell=$CELL,cluster=$CLUSTER ][ \\\"$5\\\" $6,WEB-INF/web.xml WebSphere:cell=$CELL,cluster=$CLUSTER ]] -MapWebModToVH [[ \\\"$5\\\" $6,WEB-INF/web.xml default_host ]]]' ) \""
-fi
- 
-}
-
-dep05() {
-
-  if [ "$CLUSTER" == "" ]
-  then
-    ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,WEB-INF/web.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER  ]] -MapWebModToVH [[ \\\"$3\\\" $4,WEB-INF/web.xml default_host ]]]' )\"" 
-  else
-    echo "doploying using CLUSTER"
-   ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,WEB-INF/web.xml WebSphere:cell=$CELL,cluster=$CLUSTER  ]] -MapWebModToVH [[ \\\"$3\\\" $4,WEB-INF/web.xml default_host ]]]' )\"" 
+  local modulesToServersName=("${!4}")
+  local modulesToServersValues=("${!5}")
+  
+  local finalMapForIBM="-MapModulesToServers [";
+  local hostingMap="";
+  for (( t=0; t<${#modulesToServersName[@]}; t++ ))
+  do
+    finalMapForIBM+="[ "    
+    finalMapForIBM+="\\\"${modulesToServersName[$t]}\\\" ${modulesToServersValues[$t]}"
+    if [[ "${modulesToServersValues[$t]}" == *war ]]; 
+    then 
+      finalMapForIBM+=",WEB-INF/web.xml " 
+      hostingMap+="[\\\"${modulesToServersName[$t]}\\\" ${modulesToServersValues[$t]},WEB-INF/web.xml default_host ]"
+    else 
+      finalMapForIBM+=",META-INF/ejb-jar.xml " 
+    fi
+    
+    if [ "$CLUSTER" == "" ]
+    then
+      finalMapForIBM+="WebSphere:cell=$CELL,node=$NODE,server=$SERVER ]"
+    else
+      finalMapForIBM+="WebSphere:cell=$CELL,cluster=$CLUSTER ]"
+    fi
+  done
+  finalMapForIBM+="]"
+  if [ "$hostingMap" != "" ]; 
+  then 
+    finalMapForIBM+=" -MapWebModToVH ["
+    finalMapForIBM+="$hostingMap"
+    finalMapForIBM+="]"
   fi
-}
-
-dep06() { #for REGIS && KRAZ
-  if [ "$CLUSTER" == "" ]
-  then
-    ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,META-INF/ejb-jar.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER  ][ \\\"$5\\\" $6,META-INF/ejb-jar.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER  ][ \\\"$7\\\" $8,WEB-INF/web.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER  ][ \\\"$9\\\" ${10},WEB-INF/web.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER  ]] -MapWebModToVH [[\\\"$7\\\" $8,WEB-INF/web.xml default_host ][ \\\"$9\\\" ${10},WEB-INF/web.xml default_host ]]]' )\"" 
-  else
-    echo "doploying using CLUSTER"
-   ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,META-INF/ejb-jar.xml WebSphere:cell=$CELL,cluster=$CLUSTER  ][ \\\"$5\\\" $6,META-INF/ejb-jar.xml WebSphere:cell=$CELL,cluster=$CLUSTER  ][ \\\"$7\\\" $8,WEB-INF/web.xml WebSphere:cell=$CELL,cluster=$CLUSTER  ][ \\\"$9\\\" ${10},WEB-INF/web.xml WebSphere:cell=$CELL,cluster=$CLUSTER  ]] -MapWebModToVH [[\\\"$7\\\" $8,WEB-INF/web.xml default_host ][ \\\"$9\\\" ${10},WEB-INF/web.xml default_host ]]]' )\"" 
-  fi
-}
-
-dep07() { #for KRAZ -> deprecated using dep06
-  if [ "$CLUSTER" == "" ]
-  then
-    ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,META-INF/ejb-jar.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER  ][ \\\"$5\\\" $6,META-INF/ejb-jar.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER  ][ \\\"$7\\\" $8,WEB-INF/web.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER  ][ \\\"$9\\\" ${10},WEB-INF/web.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER  ][ \\\"${11}\\\" ${12},WEB-INF/web.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER  ]] -MapWebModToVH [[\\\"$7\\\" $8,WEB-INF/web.xml default_host ][ \\\"$9\\\" ${10},WEB-INF/web.xml default_host ][ \\\"${11}\\\" ${12},WEB-INF/web.xml default_host ]]]' )\"" 
-  else
-    echo "doploying using CLUSTER"
-   ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,META-INF/ejb-jar.xml WebSphere:cell=$CELL,cluster=$CLUSTER  ][ \\\"$5\\\" $6,META-INF/ejb-jar.xml WebSphere:cell=$CELL,cluster=$CLUSTER  ][ \\\"$7\\\" $8,WEB-INF/web.xml WebSphere:cell=$CELL,cluster=$CLUSTER  ][ \\\"$9\\\" ${10},WEB-INF/web.xml WebSphere:cell=$CELL,cluster=$CLUSTER  ][ \\\"${11}\\\" ${12},WEB-INF/web.xml WebSphere:cell=$CELL,cluster=$CLUSTER  ]] -MapWebModToVH [[\\\"$7\\\" $8,WEB-INF/web.xml default_host ][ \\\"$9\\\" ${10},WEB-INF/web.xml default_host ][ \\\"${11}\\\" ${12},WEB-INF/web.xml default_host ]]]' )\"" 
-  fi
-}
-
-
-dep08() {
-if [ "$CLUSTER" == "" ]
-then
-  ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,META-INF/ejb-jar.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER ][ \\\"$5\\\" $6,WEB-INF/web.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER ]]]' ) \"" 
-else
-  echo "doploying using CLUSTER"
-  ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,META-INF/ejb-jar.xml WebSphere:cell=$CELL,cluster=$CLUSTER ][ \\\"$5\\\" $6,WEB-INF/web.xml WebSphere:cell=$CELL,cluster=$CLUSTER ]]]' ) \""
-fi
- 
-}
-
-
-dep09() {
-if [ "$CLUSTER" == "" ]
-then
-  ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,META-INF/ejb-jar.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER ][ \\\"$5\\\" $6,META-INF/ejb-jar.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER ][ \\\"$7\\\" $8,WEB-INF/web.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER ]]]' ) \"" 
-else
-  echo "doploying using CLUSTER"
-  ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminApp.update('$1', 'app', '[ -operation update -contents $2 -nopreCompileJSPs -installed.ear.destination \\\$(APP_INSTALL_ROOT)/$CELL -distributeApp -nouseMetaDataFromBinary -nodeployejb -createMBeansForResources -noreloadEnabled -nodeployws -validateinstall warn -noprocessEmbeddedConfig -filepermission .*\.dll=755#.*\.so=755#.*\.a=755#.*\.sl=755 -noallowDispatchRemoteInclude -noallowServiceRemoteInclude -asyncRequestDispatchType DISABLED -nouseAutoLink -noenableClientModule -clientMode isolated -novalidateSchema -MapModulesToServers [[ \\\"$3\\\" $4,META-INF/ejb-jar.xml WebSphere:cell=$CELL,cluster=$CLUSTER ][ \\\"$5\\\" $6,META-INF/ejb-jar.xml WebSphere:cell=$CELL,node=$NODE,server=$SERVER ][ \\\"$7\\\" $8,WEB-INF/web.xml WebSphere:cell=$CELL,cluster=$CLUSTER ]]]' ) \""
-fi
- 
-}
-
-preDeploy(){
-  echo "- UPLOADING ${15}"
-  upload "$ISIS_DEVEL/${12}" "$EAR_REMOTE_DIR/${13}"
-
-  case "${14}" in
-  01)
-	  dep01 "${15}" "$EAR_REMOTE_DIR/${13}" "${16}" "${17}" "${18}" "${19}"
-	  ;;
-  02)
-	  dep02 "${15}" "$EAR_REMOTE_DIR/${13}" "${16}" "${17}"
-	  ;;
-  03)
-	  dep03 "${15}" "$EAR_REMOTE_DIR/${13}" "${16}" "${17}"
-	  ;;
-  04)
-	  dep04 "${15}" "$EAR_REMOTE_DIR/${13}" "${16}" "${17}" "${18}" "${19}"
-	  ;;
-  05)
-	  dep05 "${15}" "$EAR_REMOTE_DIR/${13}" "${16}" "${17}" 
-	  ;;
-  06)
-	  dep06 "${15}" "$EAR_REMOTE_DIR/${13}" "${16}" "${17}" "${18}" "${19}" "${20}" "${21}" "${22}" "${23}"
-	  ;;
-	  
-  07)
-	  dep07 "${15}" "$EAR_REMOTE_DIR/${13}" "${16}" "${17}" "${18}" "${19}" "${20}" "${21}" "${22}" "${23}" "${24}" "${25}"
-	  ;;
-	  	  
-  08)
-	  dep08 "${15}" "$EAR_REMOTE_DIR/${13}" "${16}" "${17}" "${18}" "${19}" 
-	  ;;
-  09)
-	  dep09 "${15}" "$EAR_REMOTE_DIR/${13}" "${16}" "${17}" "${18}" "${19}" "${20}" "${21}"
-	  ;;
-  *)
-	  echo $"Usage: $0 {01|02|03|04}"
-	  ;;
-  esac
+    
+  genericDeploy $3 "$EAR_REMOTE_DIR/${2}" "$finalMapForIBM"
 }
 
 deployKraz(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$KRAZ1 $NC"
-  preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$KRAZ1" "$KRAZ2" "06" "$KRAZ3" "$KRAZ4" "$KRAZ5" "$KRAZ6" "$KRAZ7" "$KRAZ8" "$KRAZ9" "$KRAZ10" "$KRAZ11"
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$KRAZ1 $NC"
+  
+  local  modulesToServersName=("$KRAZ4" "$KRAZ6" "$KRAZ8" "$KRAZ10")
+  local  modulesToServersValues=("$KRAZ5" "$KRAZ7"  "$KRAZ9" "$KRAZ11")
+  genericPreDeploy "$KRAZ1" "$KRAZ2" "$KRAZ3" modulesToServersName[@] modulesToServersValues[@]
 }
 
 deployKrazMock(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$KRAZ_MOCK_1 $NC"
-  preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$KRAZ_MOCK_1" "$KRAZ_MOCK_2" "08" "$KRAZ_MOCK_3" "$KRAZ_MOCK_4" "$KRAZ_MOCK_5" "$KRAZ_MOCK_6" "$KRAZ_MOCK_7"
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$KRAZ_MOCK_1 $NC"
+  
+  local  modulesToServersName=("$KRAZ_MOCK_4" "$KRAZ_MOCK_6")
+  local  modulesToServersValues=("$KRAZ_MOCK_5" "$KRAZ_MOCK_7")
+  genericPreDeploy "$KRAZ_MOCK_1" "$KRAZ_MOCK_2" "$KRAZ_MOCK_3" modulesToServersName[@] modulesToServersValues[@]
 }
 
 deployIntrastat(){  
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$INTR1 $NC"
-   preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$INTR1" "$INTR2" "09" "$INTR3" "$INTR4" "$INTR5" "$INTR6" "$INTR7" "$INTR8" "$INTR9"
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$INTR1 $NC"
+   
+  local  modulesToServersName=("$INTR4" "$INTR6"  "$INTR8")
+  local  modulesToServersValues=("$INTR5" "$INTR7"  "$INTR9")
+   
+  genericPreDeploy "$INTR1" "$INTR2" "$INTR3" modulesToServersName[@] modulesToServersValues[@]
 }
 
 deployIntrastatMock(){  
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$INTR_MOCK_1 $NC"
-   preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$INTR_MOCK_1" "$INTR_MOCK_2" "08" "$INTR_MOCK_3" "$INTR_MOCK_4" "$INTR_MOCK_5" "$INTR_MOCK_6" "$INTR_MOCK_7" 
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$INTR_MOCK_1 $NC"
+  
+  local  modulesToServersName=("$INTR_MOCK_4" "$INTR_MOCK_6")
+  local  modulesToServersValues=("$INTR_MOCK_5" "$INTR_MOCK_7")
+  genericPreDeploy "$INTR_MOCK_1" "$INTR_MOCK_2" "$INTR_MOCK_3" modulesToServersName[@] modulesToServersValues[@]
 }
 
 deployRegis(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$REGIS1 $NC"
-  preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$REGIS1" "$REGIS2" "06" "$REGIS3" "$REGIS4" "$REGIS5" "$REGIS6" "$REGIS7" "$REGIS8" "$REGIS9" "$REGIS10" "$REGIS11"
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$REGIS1 $NC"
+   
+  local  modulesToServersName=("$REGIS4" "$REGIS6" "$REGIS8" "$REGIS10")
+  local  modulesToServersValues=("$REGIS5" "$REGIS7" "$REGIS9" "$REGIS11")
+  genericPreDeploy "$REGIS1" "$REGIS2" "$REGIS3" modulesToServersName[@] modulesToServersValues[@]
 }
 
 deployZber(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$ZBELE $NC"
-  preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$ZBELE" "$ZBEE" "01" "$ZBE" "$ZBEM1" "$ZBEM1B" "$ZBEM2" "$ZBEM2B"
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$ZBELE $NC"
+   
+  local  modulesToServersName=("$ZBEM1" "$ZBEM2")
+  local  modulesToServersValues=("$ZBEM1B" "$ZBEM2B")
+  genericPreDeploy "$ZBELE" "$ZBEE" "$ZBE" modulesToServersName[@] modulesToServersValues[@]
 }
 
 deployZbd(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$ZBDLE $NC"
-  preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$ZBDLE" "$ZBDE" "01" "$ZBD" "$ZBDM1" "$ZBDM1B" "$ZBDM2" "$ZBDM2B"
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$ZBDLE $NC"
+      
+  local  modulesToServersName=("$ZBDM1" "$ZBDM2")
+  local  modulesToServersValues=("$ZBDM1B" "$ZBDM2B")
+  genericPreDeploy "$ZBDLE" "$ZBDE" "$ZBD" modulesToServersName[@] modulesToServersValues[@]
 }
 
 deployMetis(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$METLE $NC"
-  preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$METLE" "$METE" "01" "$MET" "$METM1" "$METM1B" "$METM2" "$METM2B"
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$METLE $NC"
+         
+  local  modulesToServersName=("$METM1" "$METM2")
+  local  modulesToServersValues=("$METM1B" "$METM2B")
+  genericPreDeploy "$METLE" "$METE" "$MET" modulesToServersName[@] modulesToServersValues[@]
 }
 
 deployIAM(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$IAMLE $NC"
-  preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$IAMLE" "$IAME" "01" "$IAM" "$IAMM1" "$IAMM1B" "$IAMM2" "$IAMM2B"
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$IAMLE $NC"
+         
+  local  modulesToServersName=("$IAMM1" "$IAMM2")
+  local  modulesToServersValues=("$IAMM1B" "$IAMM2B")
+  genericPreDeploy "$IAMLE" "$IAME" "$IAM" modulesToServersName[@] modulesToServersValues[@]
 }
 
 deployWS(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"   
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$DISLE $NC"
-  preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$DISLE" "$DISE" "03" "$DIS" "$DISM1" "$DISM1B"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$RGSLE $NC"
-  preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$RGSLE" "$RGSE" "03" "$RGS" "$RGSM1" "$RGSM1B"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$STSLE $NC"
-  preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$STSLE" "$STSE" "03" "$STS" "$STSM1" "$STSM1B"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$IAWLE $NC"
-  preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$IAWLE" "$IAWE" "04" "$IAW" "$IAWM1" "$IAWM1B" "$IAWM2" "$IAWM2B"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$TMWLE $NC"
-  preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$TMWLE" "$TMWE" "05" "$TMW" "$TMWR1" "$TMW1B"
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$DISLE $NC"
+            
+  local  modulesToServersName=("$DISM1")
+  local  modulesToServersValues=("$DISM1B")
+  genericPreDeploy "$DISLE" "$DISE" "$DIS" modulesToServersName[@] modulesToServersValues[@]
+  
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$RGSLE $NC"
+  local  modulesToServersName=("$RGSM1")
+  local  modulesToServersValues=("$RGSM1B")
+  genericPreDeploy "$RGSLE" "$RGSE" "$RGS" modulesToServersName[@] modulesToServersValues[@]
+  
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$STSLE $NC"
+  local  modulesToServersName=("$STSM1")
+  local  modulesToServersValues=("$STSM1B")
+  genericPreDeploy "$STSLE" "$STSE" "$STS" modulesToServersName[@] modulesToServersValues[@]
+  
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$IAWLE $NC"
+  local  modulesToServersName=("$IAWM1" "$IAWM2")
+  local  modulesToServersValues=("$IAWM1B" "$IAWM2B")
+  genericPreDeploy "$IAWLE" "$IAWE" "$IAW" modulesToServersName[@] modulesToServersValues[@]
+  
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$TMWLE $NC"
+  local  modulesToServersName=("$TMWR1")
+  local  modulesToServersValues=("$TMW1B")
+  genericPreDeploy "$TMWLE" "$TMWE" "$TMW" modulesToServersName[@] modulesToServersValues[@]
 }
 
 deployLogapp(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL $LGALE $NC"
-  preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$LGALE" "$LGAE" "01" "$LGA" "$LGAM1" "$LGAM1B" "$LGAM2" "$LGAM2B"
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL $LGALE $NC"
+            
+  local  modulesToServersName=("$LGAM1" "$LGAM2")
+  local  modulesToServersValues=("$LGAM1B" "$LGAM2B")
+  genericPreDeploy "$LGALE" "$LGAE" "$LGA" modulesToServersName[@] modulesToServersValues[@]
 }
 
 deployTaskapp(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$TAPLE $NC"
-  preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$TAPLE" "$TAPE" "01" "$TAP" "$TAPM1" "$TAPM1B" "$TAPM2" "$TAPM2B"
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$TAPLE $NC"
+            
+  local  modulesToServersName=("$TAPM1" "$TAPM2")
+  local  modulesToServersValues=("$TAPM1B" "$TAPM2B")
+  genericPreDeploy "$TAPLE" "$TAPE" "$TAP" modulesToServersName[@] modulesToServersValues[@]
 }
 
 deployScriptLang(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-   echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$SCLLE $NC"
-  preDeploy "$HOST" "$HOST_USER" "$PROFILE" "$CELL" "$NODE" "$SERVER" "$USER" "$PASS" "$BIN" "$ISIS_DEVEL" "$EAR_REMOTE_DIR" "$SCLLE" "$SCLE" "02" "$SCL" "$SCLM1" "$SCLM1B"
+  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$SCLLE $NC"
+            
+  local  modulesToServersName=("$SCLM1")
+  local  modulesToServersValues=("$SCLM1B")
+  genericPreDeploy "$SCLLE" "$SCLE" "$SCL" modulesToServersName[@] modulesToServersValues[@]
 }
 
 postDeploy(){
