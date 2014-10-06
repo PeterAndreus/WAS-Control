@@ -673,7 +673,7 @@ genericPreDeploy(){
 
 deployKraz(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$KRAZ1 $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$KRAZ1 $NC"
   
   local  modulesToServersName=("$KRAZ4" "$KRAZ6" "$KRAZ8" "$KRAZ10")
   local  modulesToServersValues=("$KRAZ5" "$KRAZ7"  "$KRAZ9" "$KRAZ11")
@@ -682,7 +682,7 @@ deployKraz(){
 
 deployKrazMock(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$KRAZ_MOCK_1 $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$KRAZ_MOCK_1 $NC"
   
   local  modulesToServersName=("$KRAZ_MOCK_4" "$KRAZ_MOCK_6")
   local  modulesToServersValues=("$KRAZ_MOCK_5" "$KRAZ_MOCK_7")
@@ -691,7 +691,7 @@ deployKrazMock(){
 
 deployIntrastat(){  
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$INTR1 $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$INTR1 $NC"
    
   local  modulesToServersName=("$INTR4" "$INTR6"  "$INTR8")
   local  modulesToServersValues=("$INTR5" "$INTR7"  "$INTR9")
@@ -701,7 +701,7 @@ deployIntrastat(){
 
 deployIntrastatMock(){  
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$INTR_MOCK_1 $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$INTR_MOCK_1 $NC"
   
   local  modulesToServersName=("$INTR_MOCK_4" "$INTR_MOCK_6")
   local  modulesToServersValues=("$INTR_MOCK_5" "$INTR_MOCK_7")
@@ -710,7 +710,7 @@ deployIntrastatMock(){
 
 deployRegis(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$REGIS1 $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$REGIS1 $NC"
    
   local  modulesToServersName=("$REGIS4" "$REGIS6" "$REGIS8" "$REGIS10")
   local  modulesToServersValues=("$REGIS5" "$REGIS7" "$REGIS9" "$REGIS11")
@@ -719,7 +719,7 @@ deployRegis(){
 
 deployZber(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$ZBELE $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$ZBELE $NC"
    
   local  modulesToServersName=("$ZBEM1" "$ZBEM2")
   local  modulesToServersValues=("$ZBEM1B" "$ZBEM2B")
@@ -728,7 +728,7 @@ deployZber(){
 
 deployZbd(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$ZBDLE $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$ZBDLE $NC"
       
   local  modulesToServersName=("$ZBDM1" "$ZBDM2")
   local  modulesToServersValues=("$ZBDM1B" "$ZBDM2B")
@@ -737,7 +737,7 @@ deployZbd(){
 
 deployMetis(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$METLE $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$METLE $NC"
          
   local  modulesToServersName=("$METM1" "$METM2")
   local  modulesToServersValues=("$METM1B" "$METM2B")
@@ -746,7 +746,7 @@ deployMetis(){
 
 deployIAM(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$IAMLE $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$IAMLE $NC"
          
   local  modulesToServersName=("$IAMM1" "$IAMM2")
   local  modulesToServersValues=("$IAMM1B" "$IAMM2B")
@@ -755,28 +755,28 @@ deployIAM(){
 
 deployWS(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"   
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$DISLE $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$DISLE $NC"
             
   local  modulesToServersName=("$DISM1")
   local  modulesToServersValues=("$DISM1B")
   genericPreDeploy "$DISLE" "$DISE" "$DIS" modulesToServersName[@] modulesToServersValues[@]
   
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$RGSLE $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$RGSLE $NC"
   local  modulesToServersName=("$RGSM1")
   local  modulesToServersValues=("$RGSM1B")
   genericPreDeploy "$RGSLE" "$RGSE" "$RGS" modulesToServersName[@] modulesToServersValues[@]
   
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$STSLE $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$STSLE $NC"
   local  modulesToServersName=("$STSM1")
   local  modulesToServersValues=("$STSM1B")
   genericPreDeploy "$STSLE" "$STSE" "$STS" modulesToServersName[@] modulesToServersValues[@]
   
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$IAWLE $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$IAWLE $NC"
   local  modulesToServersName=("$IAWM1" "$IAWM2")
   local  modulesToServersValues=("$IAWM1B" "$IAWM2B")
   genericPreDeploy "$IAWLE" "$IAWE" "$IAW" modulesToServersName[@] modulesToServersValues[@]
   
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$TMWLE $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$TMWLE $NC"
   local  modulesToServersName=("$TMWR1")
   local  modulesToServersValues=("$TMW1B")
   genericPreDeploy "$TMWLE" "$TMWE" "$TMW" modulesToServersName[@] modulesToServersValues[@]
@@ -784,7 +784,7 @@ deployWS(){
 
 deployLogapp(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL $LGALE $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL $LGALE $NC"
             
   local  modulesToServersName=("$LGAM1" "$LGAM2")
   local  modulesToServersValues=("$LGAM1B" "$LGAM2B")
@@ -793,7 +793,7 @@ deployLogapp(){
 
 deployTaskapp(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$TAPLE $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$TAPLE $NC"
             
   local  modulesToServersName=("$TAPM1" "$TAPM2")
   local  modulesToServersValues=("$TAPM1B" "$TAPM2B")
@@ -802,7 +802,7 @@ deployTaskapp(){
 
 deployScriptLang(){
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam Ear:$YELLOW  $ISIS_DEVEL/$SCLLE $NC"
+  echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$SCLLE $NC"
             
   local  modulesToServersName=("$SCLM1")
   local  modulesToServersValues=("$SCLM1B")
@@ -822,7 +822,7 @@ deployWAR(){
 
   echo "- UPLOADING"
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam war:$YELLOW $ISIS_DEVEL/Metis$BRANCH_SFX/Gui/target/MetisGuiProject-$SETUP_VERSION.war $NC"
+  echo -e "Pouzivam war:$GREEN $ISIS_DEVEL/Metis$BRANCH_SFX/Gui/target/MetisGuiProject-$SETUP_VERSION.war $NC"
   scp $ISIS_DEVEL/Metis$BRANCH_SFX/Gui/target/MetisGuiProject-$SETUP_VERSION.war $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/installableApps/ 
   
   echo "- DEPLOY START"
@@ -834,7 +834,7 @@ deployWAR(){
 deployZberWar(){
   echo "- UPLOADING"
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam war:$YELLOW $ISIS_DEVEL/Zber$BRANCH_SFX/Gui/target/ZberGuiProject-$SETUP_VERSION.war $NC"
+  echo -e "Pouzivam war:$GREEN $ISIS_DEVEL/Zber$BRANCH_SFX/Gui/target/ZberGuiProject-$SETUP_VERSION.war $NC"
   scp $ISIS_DEVEL/Zber$BRANCH_SFX/Gui/target/ZberGuiProject-$SETUP_VERSION.war $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/installableApps/
  
   echo "- DEPLOY START"
@@ -846,7 +846,7 @@ deployZbdWar(){
 
   echo "- UPLOADING"
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam war:$YELLOW $ISIS_DEVEL/ZBD$BRANCH_SFX/Gui/target/ZBDGuiProject-$SETUP_VERSION.war $NC"
+  echo -e "Pouzivam war:$GREEN $ISIS_DEVEL/ZBD$BRANCH_SFX/Gui/target/ZBDGuiProject-$SETUP_VERSION.war $NC"
   scp $ISIS_DEVEL/ZBD$BRANCH_SFX/Gui/target/ZBDGuiProject-$SETUP_VERSION.war $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/installableApps/ 
 
   echo "- DEPLOY START"
@@ -857,7 +857,7 @@ deployZbdWar(){
 deployIamWar(){
   echo "- UPLOADING"
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam war:$YELLOW $ISIS_DEVEL/Iam$BRANCH_SFX/Gui/target/IamGuiProject-$SETUP_VERSION.war $NC"
+  echo -e "Pouzivam war:$GREEN $ISIS_DEVEL/Iam$BRANCH_SFX/Gui/target/IamGuiProject-$SETUP_VERSION.war $NC"
   scp $ISIS_DEVEL/Iam$BRANCH_SFX/Gui/target/IamGuiProject-$SETUP_VERSION.war $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/installableApps/ 
 
   echo "- DEPLOY START"
@@ -868,7 +868,7 @@ deployIamWar(){
 deployLogAppWar(){
   echo "- UPLOADING"
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam war:$YELLOW $ISIS_DEVEL/LogApp$BRANCH_SFX/Gui/target/LogAppGuiProject-$SETUP_VERSION.war $NC"
+  echo -e "Pouzivam war:$GREEN $ISIS_DEVEL/LogApp$BRANCH_SFX/Gui/target/LogAppGuiProject-$SETUP_VERSION.war $NC"
   scp $ISIS_DEVEL/LogApp$BRANCH_SFX/Gui/target/LogAppGuiProject-$SETUP_VERSION.war $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/installableApps/ 
 
   echo "- DEPLOY START"
@@ -879,7 +879,7 @@ deployLogAppWar(){
 deployIsisWar(){
   echo "- UPLOADING"
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam war:$YELLOW $ISIS_DEVEL/IsisCommon$BRANCH_SFX/IsisMenu/target/IsisMenuProject-$SETUP_VERSION.war $NC"
+  echo -e "Pouzivam war:$GREEN $ISIS_DEVEL/IsisCommon$BRANCH_SFX/IsisMenu/target/IsisMenuProject-$SETUP_VERSION.war $NC"
   scp $ISIS_DEVEL/IsisCommon$BRANCH_SFX/IsisMenu/target/IsisMenuProject-$SETUP_VERSION.war $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/installableApps/ 
 
   echo "- DEPLOY START"
