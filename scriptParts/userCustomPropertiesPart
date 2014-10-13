@@ -175,8 +175,6 @@ STSM1B="StatisticalWebServicesImplProject-$SETUP_VERSION.war"
 IAWLE="WebServices$BRANCH_SFX/IamWebServices/Ear/target/IamWsEar.ear"
 IAWE="IamWsEar.ear"
 IAW="IamWebServicesEar"
-IAWM1="IamWebServicesImplProject-$SETUP_VERSION.jar"
-IAWM1B="IamWebServicesImplProject-$SETUP_VERSION.jar"
 IAWM2="Iam WebServices"
 IAWM2B="IamWebServicesWebProject-$SETUP_VERSION.war"
 

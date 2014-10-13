@@ -1,12 +1,5 @@
-Verzia:2.5
+Verzia:3.0
  
-  22.08.2014:
-  ----------------------------------------------------------------------------
-  * Version 2.2
-  *  Upraveny deploy KRAZ potrebne pridat: 
-  *  KRAZ12="Intrastat Gui"
-     KRAZ13="IntratstatGui-$SETUP_VERSION.war"
-  
   03.09.2014:
   ----------------------------------------------------------------------------
   * Version 2.3
@@ -49,3 +42,9 @@ Verzia:2.5
     INTR_MOCK_5="IntrastatBusinessServiceImpl-mock-$SETUP_VERSION.jar"
     INTR_MOCK_6="Intrastat Gui"
     INTR_MOCK_7="IntrastatGui-$SETUP_VERSION.war"
+    
+  07.10.2014:
+  ----------------------------------------------------------------------------
+  * Version 3.0
+  * Kompletna zmena skriptu
+  * Poriesene .jar a WS z IAM

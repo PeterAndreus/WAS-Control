@@ -175,8 +175,6 @@ STSM1B="StatisticalWebServicesImplProject-$SETUP_VERSION.war"
 IAWLE="WebServices$BRANCH_SFX/IamWebServices/Ear/target/IamWsEar.ear"
 IAWE="IamWsEar.ear"
 IAW="IamWebServicesEar"
-IAWM1="IamWebServicesImplProject-$SETUP_VERSION.jar"
-IAWM1B="IamWebServicesImplProject-$SETUP_VERSION.jar"
 IAWM2="Iam WebServices"
 IAWM2B="IamWebServicesWebProject-$SETUP_VERSION.war"
 
@@ -257,7 +255,7 @@ BOLD="\033[1m"
 BLINK="\033[5m"
 REVERSE="\033[7m"
 UNDERLINE="\033[4m"
-ACTUAL_SCRIPT_VERSION="2.5"
+ACTUAL_SCRIPT_VERSION="3.0"
 
 setProfileVariables(){
   eval tmp='HOST'$ACTUAL_PROFILE
@@ -772,8 +770,8 @@ deployWS(){
   genericPreDeploy "$STSLE" "$STSE" "$STS" modulesToServersName[@] modulesToServersValues[@]
   
   echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$IAWLE $NC"
-  local  modulesToServersName=("$IAWM1" "$IAWM2")
-  local  modulesToServersValues=("$IAWM1B" "$IAWM2B")
+  local  modulesToServersName=("$IAWM2")
+  local  modulesToServersValues=("$IAWM2B")
   genericPreDeploy "$IAWLE" "$IAWE" "$IAW" modulesToServersName[@] modulesToServersValues[@]
   
   echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$TMWLE $NC"
@@ -905,8 +903,8 @@ partialDeploy() {
     i* ) deployRegis; 		partialDeploy $(echo $1|tr -d 'i') ;;
     jj* ) deployKrazMock; 	partialDeploy $(echo $1|tr -d 'jj') ;;
     j* ) deployKraz; 		partialDeploy $(echo $1|tr -d 'j') ;;
-    k* ) deployIntrastat; 	partialDeploy $(echo $1|tr -d 'k') ;;    
     kk* ) deployIntrastatMock; 	partialDeploy $(echo $1|tr -d 'kk') ;;
+    k* ) deployIntrastat; 	partialDeploy $(echo $1|tr -d 'k') ;;    
     
     u* ) deployWAR; 		partialDeploy $(echo $1|tr -d 'u') ;;    
     v* ) deployZberWar; 	partialDeploy $(echo $1|tr -d 'v') ;;
@@ -1285,19 +1283,9 @@ buildAndDeploy(){
 }
 whatIsNew(){
 clear  
-  echo -e $UNDERLINE"Verzia:2.5 $NE"
+  echo -e $UNDERLINE"Verzia:3.0 $NE"
   echo ""
-  echo ""  
-  
-  echo -e "$RED 22.08.2014: $NC"
-  echo "----------------------------------------------------------------------------"
-  echo "* Version 2.2"
-  echo "* Upraveny deploy KRAZ potrebne pridat: "
-  echo "* KRAZ12=\"Intrastat Gui\"
-	  KRAZ13=\"IntratstatGui-\$SETUP_VERSION.war\"
-	  "
-  echo ""
-  
+  echo ""    
   echo -e "$RED 03.09.2014: $NC"
   echo "----------------------------------------------------------------------------"
   echo "* Version 2.3"
@@ -1345,7 +1333,14 @@ clear
 	    INTR_MOCK_6=\"Intrastat Gui\"
 	    INTR_MOCK_7=\"IntrastatGui-\$SETUP_VERSION.war\" 
 	  "
-  echo ""
+  echo ""  
+  echo -e "$RED 07.10.2014: $NC"
+  
+  echo "----------------------------------------------------------------------------
+  * Version 3.0
+  * Kompletna zmena skriptu
+  * Poriesene .jar a WS z IAM
+  "
   read
 }
 
@@ -1866,7 +1861,7 @@ removeOldJars(){
   let "OLD_VERSION = $(echo $SETUP_VERSION | cut -d"." -f2 ) -1"
   RMIAMSECURITY="$VIRTUAL_PORTAL/shared/ext/IsisSecurityProject-*.jar"
   RMIAMLOGINFACADE="$VIRTUAL_PORTAL/shared/ext/IamBusinessServiceFacadeForCustomLoginProject-*.jar"
-  RMIAMLOGIN="$VIRTUAL_PORTAL/shared/ext/IamAuthCustomLoginModuleProject-*.jar"
+  RMIAMLOGIN="$VIRTUAL_PORTAL/shared/app/IamAuthCustomLoginModuleProject-*.jar"
   RMCOMMONUTILS="$VIRTUAL_WAS/lib/ext/CommonUtilsProject-*.jar"
   RMEJBPORTAL="$VIRTUAL_WAS/lib/ext/EjbConfigProject-*.jar"
   RMEJBWAS="$VIRTUAL_WAS/lib/ext/EjbConfigProject-*.jar"
@@ -1911,7 +1906,7 @@ sendJars(){
   echo '...'
   scp $ISIS_DEVEL/Iam/Business/ServiceFacadeForCustomLogin/target/IamBusinessServiceFacadeForCustomLoginProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/ext/
   echo '...'
-  scp $ISIS_DEVEL/Iam$BRANCH_SFX/Auth/CustomLoginModule/target/IamAuthCustomLoginModuleProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/ext/
+  scp $ISIS_DEVEL/Iam$BRANCH_SFX/Auth/CustomLoginModule/target/IamAuthCustomLoginModuleProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/app/
   echo '...'
   scp $COMMON_DEVEL/CommonUtils/target/CommonUtilsProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_WAS/lib/ext/
   echo '...'

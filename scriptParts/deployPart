@@ -144,8 +144,8 @@ deployWS(){
   genericPreDeploy "$STSLE" "$STSE" "$STS" modulesToServersName[@] modulesToServersValues[@]
   
   echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$IAWLE $NC"
-  local  modulesToServersName=("$IAWM1" "$IAWM2")
-  local  modulesToServersValues=("$IAWM1B" "$IAWM2B")
+  local  modulesToServersName=("$IAWM2")
+  local  modulesToServersValues=("$IAWM2B")
   genericPreDeploy "$IAWLE" "$IAWE" "$IAW" modulesToServersName[@] modulesToServersValues[@]
   
   echo -e "Pouzivam Ear:$GREEN  $ISIS_DEVEL/$TMWLE $NC"

@@ -1,5 +1,5 @@
 #!/bin/bash
 
-scp /home/andreus/scripts/Scripts/wasControlNews pipo.sk:./www/
-scp /home/andreus/scripts/Scripts/wasControl.sh pipo.sk:./www/wasControlUpdate.sh
+scp ./wasControlNews pipo.sk:./www/
+scp ./wasControl.sh pipo.sk:./www/wasControlUpdate.sh
 
