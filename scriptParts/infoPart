@@ -1,19 +1,9 @@
 
 whatIsNew(){
 clear  
-  echo -e $UNDERLINE"Verzia:3.0 $NE"
+  echo -e $UNDERLINE"Verzia:3.1 $NE"
   echo ""
-  echo ""    
-  echo -e "$RED 03.09.2014: $NC"
-  echo "----------------------------------------------------------------------------"
-  echo "* Version 2.3"
-  echo "* Upraveny deploy KRAZ (ne)potrebne odstranit: "
-  echo "* KRAZ12=\"Intrastat Gui\"
-	  KRAZ13=\"IntratstatGui-\$SETUP_VERSION.war\"
-	  "
   echo ""
-  
-  
   echo -e "$RED 08.09.2014: $NC"
   echo "----------------------------------------------------------------------------"
   echo "* Version 2.4"
@@ -58,6 +48,13 @@ clear
   * Version 3.0
   * Kompletna zmena skriptu
   * Poriesene .jar a WS z IAM
+  "
+  echo ""  
+  echo -e "$RED 28.10.2014: $NC"
+  
+  echo "----------------------------------------------------------------------------
+  * Version 3.1
+  * Zmena ciest k EJB suborom
   "
   read
 }

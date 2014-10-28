@@ -203,7 +203,7 @@ KRAZ11="KrazGui-$SETUP_VERSION.war"
 KRAZ_MOCK_1="Kraz2$BRANCH_SFX/Ear-mock/target/Kraz.ear"
 KRAZ_MOCK_2="Kraz.ear"
 KRAZ_MOCK_3="Kraz"
-KRAZ_MOCK_4="KrazBusinessServiceImpl-mock-$SETUP_VERSION.jar"
+KRAZ_MOCK_4="KrazBusinessServiceImpl-mock.jar"
 KRAZ_MOCK_5="KrazBusinessServiceImpl-mock-$SETUP_VERSION.jar"
 KRAZ_MOCK_6="Kraz Gui"
 KRAZ_MOCK_7="KrazGui-$SETUP_VERSION.war"
@@ -255,7 +255,7 @@ BOLD="\033[1m"
 BLINK="\033[5m"
 REVERSE="\033[7m"
 UNDERLINE="\033[4m"
-ACTUAL_SCRIPT_VERSION="3.0"
+ACTUAL_SCRIPT_VERSION="3.1"
 
 setProfileVariables(){
   eval tmp='HOST'$ACTUAL_PROFILE
@@ -1283,19 +1283,9 @@ buildAndDeploy(){
 }
 whatIsNew(){
 clear  
-  echo -e $UNDERLINE"Verzia:3.0 $NE"
+  echo -e $UNDERLINE"Verzia:3.1 $NE"
   echo ""
-  echo ""    
-  echo -e "$RED 03.09.2014: $NC"
-  echo "----------------------------------------------------------------------------"
-  echo "* Version 2.3"
-  echo "* Upraveny deploy KRAZ (ne)potrebne odstranit: "
-  echo "* KRAZ12=\"Intrastat Gui\"
-	  KRAZ13=\"IntratstatGui-\$SETUP_VERSION.war\"
-	  "
   echo ""
-  
-  
   echo -e "$RED 08.09.2014: $NC"
   echo "----------------------------------------------------------------------------"
   echo "* Version 2.4"
@@ -1340,6 +1330,13 @@ clear
   * Version 3.0
   * Kompletna zmena skriptu
   * Poriesene .jar a WS z IAM
+  "
+  echo ""  
+  echo -e "$RED 28.10.2014: $NC"
+  
+  echo "----------------------------------------------------------------------------
+  * Version 3.1
+  * Zmena ciest k EJB suborom
   "
   read
 }
@@ -1393,8 +1390,8 @@ read
 ejbMenu(){
   clear
   
-  EJB_CONFIG_WAS_SVN="$ISIS_DEVEL/ejbConfigWas.txt"
-  EJB_CONFIG_PORTAL_SVN="$ISIS_DEVEL/ejbConfigPortal.txt"
+  EJB_CONFIG_WAS_SVN="$ISIS_DEVEL/Deploy/ejbConfigWas.txt"
+  EJB_CONFIG_PORTAL_SVN="$ISIS_DEVEL/Deploy/ejbConfigPortal.txt"
   
   echo "1. Skontrolovat EJB config WAS		"
   echo "2. Skontrolovat EJB config PORTAL	"

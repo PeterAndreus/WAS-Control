@@ -2,8 +2,8 @@
 ejbMenu(){
   clear
   
-  EJB_CONFIG_WAS_SVN="$ISIS_DEVEL/ejbConfigWas.txt"
-  EJB_CONFIG_PORTAL_SVN="$ISIS_DEVEL/ejbConfigPortal.txt"
+  EJB_CONFIG_WAS_SVN="$ISIS_DEVEL/Deploy/ejbConfigWas.txt"
+  EJB_CONFIG_PORTAL_SVN="$ISIS_DEVEL/Deploy/ejbConfigPortal.txt"
   
   echo "1. Skontrolovat EJB config WAS		"
   echo "2. Skontrolovat EJB config PORTAL	"

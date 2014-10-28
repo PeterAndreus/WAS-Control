@@ -1,0 +1,648 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for sk.microcomp.javascript:dojo-war:war:1.1.0
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-war-plugin is missing. @ line 24, column 21
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] Commons
+[INFO] Utils
+[INFO] EjbConfig
+[INFO] JUnitSupport
+[INFO] WasSupport
+[INFO] javascript-gui
+[INFO] dojo-war
+[INFO] mc-component
+[INFO] mc-component-pojo
+[INFO] mc-component-war
+[INFO] TaskApp
+[INFO] TaskAppCommon
+[INFO] TaskAppCore
+[INFO] TaskAppCoreDomainDao
+[INFO] TaskAppCoreDaoImpl
+[INFO] TaskAppBusiness
+[INFO] TaskAppBusinessServiceFacade
+[INFO] TaskAppBusinessServiceImpl
+[INFO] TaskAppBusinessServiceImpl-mock
+[INFO] TaskAppEar
+[INFO] TaskAppEar-mock
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Commons 1.21.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ CommonConfigProject ---
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ CommonConfigProject ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/pom.xml to /home/andreus/.m2/repository/sk/microcomp/common/CommonConfigProject/1.21.0/CommonConfigProject-1.21.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Utils 1.21.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ CommonUtilsProject ---
+[INFO] Deleting /home/andreus/svn/Common.devel/trunk/CommonUtils/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ CommonUtilsProject ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 0 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ CommonUtilsProject ---
+[INFO] Compiling 107 source files to /home/andreus/svn/Common.devel/trunk/CommonUtils/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ CommonUtilsProject ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 3 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:testCompile (default-testCompile) @ CommonUtilsProject ---
+[INFO] Compiling 62 source files to /home/andreus/svn/Common.devel/trunk/CommonUtils/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ CommonUtilsProject ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.3.1:jar (default-jar) @ CommonUtilsProject ---
+[INFO] Building jar: /home/andreus/svn/Common.devel/trunk/CommonUtils/target/CommonUtilsProject-1.21.0.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ CommonUtilsProject ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/CommonUtils/target/CommonUtilsProject-1.21.0.jar to /home/andreus/.m2/repository/sk/microcomp/common/CommonUtilsProject/1.21.0/CommonUtilsProject-1.21.0.jar
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/CommonUtils/pom.xml to /home/andreus/.m2/repository/sk/microcomp/common/CommonUtilsProject/1.21.0/CommonUtilsProject-1.21.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building EjbConfig 1.21.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ EjbConfigProject ---
+[INFO] Deleting /home/andreus/svn/Common.devel/trunk/EjbConfig/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ EjbConfigProject ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 0 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ EjbConfigProject ---
+[INFO] Compiling 5 source files to /home/andreus/svn/Common.devel/trunk/EjbConfig/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ EjbConfigProject ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/andreus/svn/Common.devel/trunk/EjbConfig/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:testCompile (default-testCompile) @ EjbConfigProject ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ EjbConfigProject ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.3.1:jar (default-jar) @ EjbConfigProject ---
+[INFO] Building jar: /home/andreus/svn/Common.devel/trunk/EjbConfig/target/EjbConfigProject-1.21.0.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ EjbConfigProject ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/EjbConfig/target/EjbConfigProject-1.21.0.jar to /home/andreus/.m2/repository/sk/microcomp/common/EjbConfigProject/1.21.0/EjbConfigProject-1.21.0.jar
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/EjbConfig/pom.xml to /home/andreus/.m2/repository/sk/microcomp/common/EjbConfigProject/1.21.0/EjbConfigProject-1.21.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building JUnitSupport 1.21.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ JUnitSupport ---
+[INFO] Deleting /home/andreus/svn/Common.devel/trunk/JUnitSupport/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ JUnitSupport ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 0 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ JUnitSupport ---
+[INFO] Compiling 9 source files to /home/andreus/svn/Common.devel/trunk/JUnitSupport/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ JUnitSupport ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/andreus/svn/Common.devel/trunk/JUnitSupport/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:testCompile (default-testCompile) @ JUnitSupport ---
+[INFO] Compiling 7 source files to /home/andreus/svn/Common.devel/trunk/JUnitSupport/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ JUnitSupport ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.3.1:jar (default-jar) @ JUnitSupport ---
+[INFO] Building jar: /home/andreus/svn/Common.devel/trunk/JUnitSupport/target/JUnitSupport-1.21.0.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ JUnitSupport ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/JUnitSupport/target/JUnitSupport-1.21.0.jar to /home/andreus/.m2/repository/sk/microcomp/common/JUnitSupport/1.21.0/JUnitSupport-1.21.0.jar
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/JUnitSupport/pom.xml to /home/andreus/.m2/repository/sk/microcomp/common/JUnitSupport/1.21.0/JUnitSupport-1.21.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building WasSupport 1.21.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ WasSupportProject ---
+[INFO] Deleting /home/andreus/svn/Common.devel/trunk/WasSupport/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ WasSupportProject ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 0 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ WasSupportProject ---
+[INFO] Compiling 2 source files to /home/andreus/svn/Common.devel/trunk/WasSupport/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ WasSupportProject ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/andreus/svn/Common.devel/trunk/WasSupport/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:testCompile (default-testCompile) @ WasSupportProject ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ WasSupportProject ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.3.1:jar (default-jar) @ WasSupportProject ---
+[INFO] Building jar: /home/andreus/svn/Common.devel/trunk/WasSupport/target/WasSupportProject-1.21.0.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ WasSupportProject ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/WasSupport/target/WasSupportProject-1.21.0.jar to /home/andreus/.m2/repository/sk/microcomp/common/WasSupportProject/1.21.0/WasSupportProject-1.21.0.jar
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/WasSupport/pom.xml to /home/andreus/.m2/repository/sk/microcomp/common/WasSupportProject/1.21.0/WasSupportProject-1.21.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building javascript-gui 1.1.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ javascript-gui ---
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ javascript-gui ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/JavaScriptGui/pom.xml to /home/andreus/.m2/repository/sk/microcomp/javascript/javascript-gui/1.1.0/javascript-gui-1.1.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building dojo-war 1.1.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ dojo-war ---
+[INFO] Deleting /home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target
+[INFO] 
+[INFO] --- download-maven-plugin:1.2.0:wget (download-dojo) @ dojo-war ---
+[INFO] Got from cache: /home/andreus/.m2/repository/.cache/maven-download-plugin/dojo-release-1.10.1-src.tar.gz
+[INFO] Expanding: /home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/dojo-release-1.10.1-src.tar.gz into /home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target
+[INFO] 
+[INFO] --- download-maven-plugin:1.2.0:wget (download-put-selector) @ dojo-war ---
+[INFO] Got from cache: /home/andreus/.m2/repository/.cache/maven-download-plugin/v0.3.5.tar.gz
+[INFO] Expanding: /home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/v0.3.5.tar.gz into /home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target
+[INFO] 
+[INFO] --- download-maven-plugin:1.2.0:wget (download-xstyle) @ dojo-war ---
+[INFO] Got from cache: /home/andreus/.m2/repository/.cache/maven-download-plugin/v0.2.1.tar.gz
+[INFO] Expanding: /home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/v0.2.1.tar.gz into /home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target
+[INFO] 
+[INFO] --- download-maven-plugin:1.2.0:wget (download-dgrid) @ dojo-war ---
+[INFO] Got from cache: /home/andreus/.m2/repository/.cache/maven-download-plugin/v0.3.15.tar.gz
+[INFO] Expanding: /home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/v0.3.15.tar.gz into /home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ dojo-war ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ dojo-war ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ dojo-war ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:testCompile (default-testCompile) @ dojo-war ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ dojo-war ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-war-plugin:2.1.1:war (default-war) @ dojo-war ---
+[INFO] Packaging webapp
+[INFO] Assembling webapp [dojo-war] in [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/dojo-war-1.1.0]
+[INFO] Processing war project
+[INFO] Copying webapp webResources [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/dojo-release-1.10.1-src/dojo] to [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/dojo-war-1.1.0]
+[INFO] Copying webapp webResources [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/dojo-release-1.10.1-src/dijit] to [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/dojo-war-1.1.0]
+[INFO] Copying webapp webResources [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/dojo-release-1.10.1-src/dojox] to [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/dojo-war-1.1.0]
+[INFO] Copying webapp webResources [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/put-selector-0.3.5] to [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/dojo-war-1.1.0]
+[INFO] Copying webapp webResources [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/xstyle-0.2.1] to [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/dojo-war-1.1.0]
+[INFO] Copying webapp webResources [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/dgrid-0.3.15] to [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/dojo-war-1.1.0]
+[INFO] Copying webapp resources [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/src/main/webapp]
+[INFO] Webapp assembled in [2629 msecs]
+[INFO] Building war: /home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/dojo-war-1.1.0.war
+[INFO] WEB-INF/web.xml already added, skipping
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ dojo-war ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/target/dojo-war-1.1.0.war to /home/andreus/.m2/repository/sk/microcomp/javascript/dojo-war/1.1.0/dojo-war-1.1.0.war
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/JavaScriptGui/Dojo/pom.xml to /home/andreus/.m2/repository/sk/microcomp/javascript/dojo-war/1.1.0/dojo-war-1.1.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building mc-component 1.1.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ mc-component ---
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ mc-component ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/JavaScriptGui/McComponent/pom.xml to /home/andreus/.m2/repository/sk/microcomp/javascript/mc-component/1.1.0/mc-component-1.1.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building mc-component-pojo 1.1.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ mc-component-pojo ---
+[INFO] Deleting /home/andreus/svn/Common.devel/trunk/JavaScriptGui/McComponent/McComponentPojo/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ mc-component-pojo ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 0 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ mc-component-pojo ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 8 source files to /home/andreus/svn/Common.devel/trunk/JavaScriptGui/McComponent/McComponentPojo/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ mc-component-pojo ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/andreus/svn/Common.devel/trunk/JavaScriptGui/McComponent/McComponentPojo/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ mc-component-pojo ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ mc-component-pojo ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.3.2:jar (default-jar) @ mc-component-pojo ---
+[INFO] Building jar: /home/andreus/svn/Common.devel/trunk/JavaScriptGui/McComponent/McComponentPojo/target/mc-component-pojo-1.1.0.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ mc-component-pojo ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/JavaScriptGui/McComponent/McComponentPojo/target/mc-component-pojo-1.1.0.jar to /home/andreus/.m2/repository/sk/microcomp/javascript/mc-component-pojo/1.1.0/mc-component-pojo-1.1.0.jar
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/JavaScriptGui/McComponent/McComponentPojo/pom.xml to /home/andreus/.m2/repository/sk/microcomp/javascript/mc-component-pojo/1.1.0/mc-component-pojo-1.1.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building mc-component-war 1.1.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ mc-component-war ---
+[INFO] Deleting /home/andreus/svn/Common.devel/trunk/JavaScriptGui/McComponent/McComponentWar/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ mc-component-war ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 0 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ mc-component-war ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ mc-component-war ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/andreus/svn/Common.devel/trunk/JavaScriptGui/McComponent/McComponentWar/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:testCompile (default-testCompile) @ mc-component-war ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ mc-component-war ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-war-plugin:2.4:war (default-war) @ mc-component-war ---
+[INFO] Packaging webapp
+[INFO] Assembling webapp [mc-component-war] in [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/McComponent/McComponentWar/target/mc-component-war-1.1.0]
+[INFO] Processing war project
+[INFO] Copying webapp resources [/home/andreus/svn/Common.devel/trunk/JavaScriptGui/McComponent/McComponentWar/src/main/webapp]
+[INFO] Webapp assembled in [20 msecs]
+[INFO] Building war: /home/andreus/svn/Common.devel/trunk/JavaScriptGui/McComponent/McComponentWar/target/mc-component-war-1.1.0.war
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ mc-component-war ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/JavaScriptGui/McComponent/McComponentWar/target/mc-component-war-1.1.0.war to /home/andreus/.m2/repository/sk/microcomp/javascript/mc-component-war/1.1.0/mc-component-war-1.1.0.war
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/JavaScriptGui/McComponent/McComponentWar/pom.xml to /home/andreus/.m2/repository/sk/microcomp/javascript/mc-component-war/1.1.0/mc-component-war-1.1.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building TaskApp 1.0.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ TaskApp ---
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ TaskApp ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/pom.xml to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskApp/1.0.0/TaskApp-1.0.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building TaskAppCommon 1.0.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ TaskAppCommon ---
+[INFO] Deleting /home/andreus/svn/Common.devel/trunk/TaskApp/Common/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ TaskAppCommon ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 0 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ TaskAppCommon ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 10 source files to /home/andreus/svn/Common.devel/trunk/TaskApp/Common/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ TaskAppCommon ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/andreus/svn/Common.devel/trunk/TaskApp/Common/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ TaskAppCommon ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ TaskAppCommon ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.3.2:jar (default-jar) @ TaskAppCommon ---
+[INFO] Building jar: /home/andreus/svn/Common.devel/trunk/TaskApp/Common/target/TaskAppCommon-1.0.0.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ TaskAppCommon ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Common/target/TaskAppCommon-1.0.0.jar to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppCommon/1.0.0/TaskAppCommon-1.0.0.jar
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Common/pom.xml to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppCommon/1.0.0/TaskAppCommon-1.0.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building TaskAppCore 1.0.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ TaskAppCore ---
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ TaskAppCore ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Core/pom.xml to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppCore/1.0.0/TaskAppCore-1.0.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building TaskAppCoreDomainDao 1.0.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ TaskAppCoreDomainDao ---
+[INFO] Deleting /home/andreus/svn/Common.devel/trunk/TaskApp/Core/DomainDao/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ TaskAppCoreDomainDao ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 0 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ TaskAppCoreDomainDao ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 3 source files to /home/andreus/svn/Common.devel/trunk/TaskApp/Core/DomainDao/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ TaskAppCoreDomainDao ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/andreus/svn/Common.devel/trunk/TaskApp/Core/DomainDao/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ TaskAppCoreDomainDao ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ TaskAppCoreDomainDao ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.3.2:jar (default-jar) @ TaskAppCoreDomainDao ---
+[INFO] Building jar: /home/andreus/svn/Common.devel/trunk/TaskApp/Core/DomainDao/target/TaskAppCoreDomainDao-1.0.0.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ TaskAppCoreDomainDao ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Core/DomainDao/target/TaskAppCoreDomainDao-1.0.0.jar to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppCoreDomainDao/1.0.0/TaskAppCoreDomainDao-1.0.0.jar
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Core/DomainDao/pom.xml to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppCoreDomainDao/1.0.0/TaskAppCoreDomainDao-1.0.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building TaskAppCoreDaoImpl 1.0.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ TaskAppCoreDaoImpl ---
+[INFO] Deleting /home/andreus/svn/Common.devel/trunk/TaskApp/Core/DaoImpl/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ TaskAppCoreDaoImpl ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 2 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ TaskAppCoreDaoImpl ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /home/andreus/svn/Common.devel/trunk/TaskApp/Core/DaoImpl/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ TaskAppCoreDaoImpl ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/andreus/svn/Common.devel/trunk/TaskApp/Core/DaoImpl/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ TaskAppCoreDaoImpl ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ TaskAppCoreDaoImpl ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-ejb-plugin:2.4:ejb (default-ejb) @ TaskAppCoreDaoImpl ---
+[INFO] Building EJB TaskAppCoreDaoImpl-1.0.0 with EJB version 3.2
+[INFO] Building jar: /home/andreus/svn/Common.devel/trunk/TaskApp/Core/DaoImpl/target/TaskAppCoreDaoImpl-1.0.0.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ TaskAppCoreDaoImpl ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Core/DaoImpl/target/TaskAppCoreDaoImpl-1.0.0.jar to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppCoreDaoImpl/1.0.0/TaskAppCoreDaoImpl-1.0.0.jar
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Core/DaoImpl/pom.xml to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppCoreDaoImpl/1.0.0/TaskAppCoreDaoImpl-1.0.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building TaskAppBusiness 1.0.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ TaskAppBusiness ---
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ TaskAppBusiness ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Business/pom.xml to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppBusiness/1.0.0/TaskAppBusiness-1.0.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building TaskAppBusinessServiceFacade 1.0.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ TaskAppBusinessServiceFacade ---
+[INFO] Deleting /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceFacade/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ TaskAppBusinessServiceFacade ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 0 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ TaskAppBusinessServiceFacade ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 10 source files to /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceFacade/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ TaskAppBusinessServiceFacade ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceFacade/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ TaskAppBusinessServiceFacade ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ TaskAppBusinessServiceFacade ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.3.2:jar (default-jar) @ TaskAppBusinessServiceFacade ---
+[INFO] Building jar: /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceFacade/target/TaskAppBusinessServiceFacade-1.0.0.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ TaskAppBusinessServiceFacade ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceFacade/target/TaskAppBusinessServiceFacade-1.0.0.jar to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppBusinessServiceFacade/1.0.0/TaskAppBusinessServiceFacade-1.0.0.jar
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceFacade/pom.xml to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppBusinessServiceFacade/1.0.0/TaskAppBusinessServiceFacade-1.0.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building TaskAppBusinessServiceImpl 1.0.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ TaskAppBusinessServiceImpl ---
+[INFO] Deleting /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceImpl/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ TaskAppBusinessServiceImpl ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ TaskAppBusinessServiceImpl ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 23 source files to /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceImpl/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ TaskAppBusinessServiceImpl ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 3 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ TaskAppBusinessServiceImpl ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 5 source files to /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceImpl/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ TaskAppBusinessServiceImpl ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-ejb-plugin:2.4:ejb (default-ejb) @ TaskAppBusinessServiceImpl ---
+[INFO] Building EJB TaskAppBusinessServiceImpl-1.0.0 with EJB version 3.2
+[INFO] Building jar: /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceImpl/target/TaskAppBusinessServiceImpl-1.0.0.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ TaskAppBusinessServiceImpl ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceImpl/target/TaskAppBusinessServiceImpl-1.0.0.jar to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppBusinessServiceImpl/1.0.0/TaskAppBusinessServiceImpl-1.0.0.jar
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceImpl/pom.xml to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppBusinessServiceImpl/1.0.0/TaskAppBusinessServiceImpl-1.0.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building TaskAppBusinessServiceImpl-mock 1.0.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ TaskAppBusinessServiceImpl-mock ---
+[INFO] Deleting /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceImpl-mock/target
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:resources (default-resources) @ TaskAppBusinessServiceImpl-mock ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 2 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ TaskAppBusinessServiceImpl-mock ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 3 source files to /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceImpl-mock/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.5:testResources (default-testResources) @ TaskAppBusinessServiceImpl-mock ---
+[debug] execute contextualize
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceImpl-mock/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ TaskAppBusinessServiceImpl-mock ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.10:test (default-test) @ TaskAppBusinessServiceImpl-mock ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-ejb-plugin:2.4:ejb (default-ejb) @ TaskAppBusinessServiceImpl-mock ---
+[INFO] Building EJB TaskAppBusinessServiceImpl-mock-1.0.0 with EJB version 3.2
+[INFO] Building jar: /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceImpl-mock/target/TaskAppBusinessServiceImpl-mock-1.0.0.jar
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ TaskAppBusinessServiceImpl-mock ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceImpl-mock/target/TaskAppBusinessServiceImpl-mock-1.0.0.jar to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppBusinessServiceImpl-mock/1.0.0/TaskAppBusinessServiceImpl-mock-1.0.0.jar
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Business/ServiceImpl-mock/pom.xml to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppBusinessServiceImpl-mock/1.0.0/TaskAppBusinessServiceImpl-mock-1.0.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building TaskAppEar 1.0.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ TaskAppEar ---
+[INFO] Deleting /home/andreus/svn/Common.devel/trunk/TaskApp/Ear/target
+[INFO] 
+[INFO] --- maven-ear-plugin:2.6:generate-application-xml (default-generate-application-xml) @ TaskAppEar ---
+[INFO] Generating application.xml
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:resources (default-resources) @ TaskAppEar ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/andreus/svn/Common.devel/trunk/TaskApp/Ear/src/main/resources
+[INFO] 
+[INFO] --- maven-ear-plugin:2.6:ear (default-ear) @ TaskAppEar ---
+[INFO] Copying artifact[ejb:sk.microcomp.taskapp:TaskAppCoreDaoImpl:1.0.0] to[TaskAppCoreDaoImpl-1.0.0.jar]
+[INFO] Copying artifact[ejb:sk.microcomp.taskapp:TaskAppBusinessServiceImpl:1.0.0] to[TaskAppBusinessServiceImpl-1.0.0.jar]
+[INFO] Copying artifact[jar:sk.microcomp.taskapp:TaskAppCoreDomainDao:1.0.0] to[lib/TaskAppCoreDomainDao-1.0.0.jar]
+[INFO] Copying artifact[jar:sk.microcomp.taskapp:TaskAppCommon:1.0.0] to[lib/TaskAppCommon-1.0.0.jar]
+[INFO] Copying artifact[jar:sk.r3n:r3n-sql:3.0.0] to[lib/r3n-sql-3.0.0.jar]
+[INFO] Copying artifact[jar:sk.r3n:r3n-util:3.0.0] to[lib/r3n-util-3.0.0.jar]
+[INFO] Copying artifact[jar:sk.microcomp.taskapp:TaskAppBusinessServiceFacade:1.0.0] to[lib/TaskAppBusinessServiceFacade-1.0.0.jar]
+[INFO] Copying artifact[jar:commons-lang:commons-lang:2.6] to[lib/commons-lang-2.6.jar]
+[INFO] Could not find manifest file: /home/andreus/svn/Common.devel/trunk/TaskApp/Ear/target/TaskAppEar-1.0.0/META-INF/MANIFEST.MF - Generating one
+[INFO] Building jar: /home/andreus/svn/Common.devel/trunk/TaskApp/Ear/target/TaskApp.ear
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ TaskAppEar ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Ear/target/TaskApp.ear to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppEar/1.0.0/TaskAppEar-1.0.0.ear
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Ear/pom.xml to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppEar/1.0.0/TaskAppEar-1.0.0.pom
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building TaskAppEar-mock 1.0.0
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:2.4.1:clean (default-clean) @ TaskAppEar-mock ---
+[INFO] Deleting /home/andreus/svn/Common.devel/trunk/TaskApp/Ear-mock/target
+[INFO] 
+[INFO] --- maven-ear-plugin:2.6:generate-application-xml (default-generate-application-xml) @ TaskAppEar-mock ---
+[INFO] Generating application.xml
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:resources (default-resources) @ TaskAppEar-mock ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /home/andreus/svn/Common.devel/trunk/TaskApp/Ear-mock/src/main/resources
+[INFO] 
+[INFO] --- maven-ear-plugin:2.6:ear (default-ear) @ TaskAppEar-mock ---
+[INFO] Copying artifact[ejb:sk.microcomp.taskapp:TaskAppBusinessServiceImpl-mock:1.0.0] to[TaskAppBusinessServiceImpl-mock-1.0.0.jar]
+[INFO] Copying artifact[jar:sk.microcomp.taskapp:TaskAppBusinessServiceFacade:1.0.0] to[lib/TaskAppBusinessServiceFacade-1.0.0.jar]
+[INFO] Copying artifact[jar:commons-lang:commons-lang:2.6] to[lib/commons-lang-2.6.jar]
+[INFO] Copying artifact[jar:sk.r3n:r3n-sql:3.0.0] to[lib/r3n-sql-3.0.0.jar]
+[INFO] Copying artifact[jar:sk.r3n:r3n-util:3.0.0] to[lib/r3n-util-3.0.0.jar]
+[INFO] Could not find manifest file: /home/andreus/svn/Common.devel/trunk/TaskApp/Ear-mock/target/TaskAppEar-mock-1.0.0/META-INF/MANIFEST.MF - Generating one
+[INFO] Building jar: /home/andreus/svn/Common.devel/trunk/TaskApp/Ear-mock/target/TaskApp.ear
+[INFO] 
+[INFO] --- maven-install-plugin:2.3.1:install (default-install) @ TaskAppEar-mock ---
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Ear-mock/target/TaskApp.ear to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppEar-mock/1.0.0/TaskAppEar-mock-1.0.0.ear
+[INFO] Installing /home/andreus/svn/Common.devel/trunk/TaskApp/Ear-mock/pom.xml to /home/andreus/.m2/repository/sk/microcomp/taskapp/TaskAppEar-mock/1.0.0/TaskAppEar-mock-1.0.0.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] 
+[INFO] Commons ........................................... SUCCESS [0.174s]
+[INFO] Utils ............................................. SUCCESS [2.283s]
+[INFO] EjbConfig ......................................... SUCCESS [0.326s]
+[INFO] JUnitSupport ...................................... SUCCESS [0.692s]
+[INFO] WasSupport ........................................ SUCCESS [0.283s]
+[INFO] javascript-gui .................................... SUCCESS [0.046s]
+[INFO] dojo-war .......................................... SUCCESS [10.196s]
+[INFO] mc-component ...................................... SUCCESS [0.037s]
+[INFO] mc-component-pojo ................................. SUCCESS [0.704s]
+[INFO] mc-component-war .................................. SUCCESS [0.208s]
+[INFO] TaskApp ........................................... SUCCESS [0.035s]
+[INFO] TaskAppCommon ..................................... SUCCESS [0.332s]
+[INFO] TaskAppCore ....................................... SUCCESS [0.028s]
+[INFO] TaskAppCoreDomainDao .............................. SUCCESS [0.090s]
+[INFO] TaskAppCoreDaoImpl ................................ SUCCESS [0.259s]
+[INFO] TaskAppBusiness ................................... SUCCESS [0.003s]
+[INFO] TaskAppBusinessServiceFacade ...................... SUCCESS [0.099s]
+[INFO] TaskAppBusinessServiceImpl ........................ SUCCESS [0.313s]
+[INFO] TaskAppBusinessServiceImpl-mock ................... SUCCESS [0.129s]
+[INFO] TaskAppEar ........................................ SUCCESS [0.185s]
+[INFO] TaskAppEar-mock ................................... SUCCESS [0.055s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 16.747s
+[INFO] Finished at: Thu Oct 23 09:44:46 CEST 2014
+[INFO] Final Memory: 52M/827M
+[INFO] ------------------------------------------------------------------------
