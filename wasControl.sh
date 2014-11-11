@@ -15,7 +15,7 @@ COMMON_DEVEL="$SVN/Common.devel/trunk"						# SVN cesta pre Common
 EAR_REMOTE_DIR="/tmp/"								# Temporary cesta na upload EAR
 DEPLOY_LOG="/home/andreus/deploy.log"						# Cesta pre ulozenie deploy Logu
 BUILD_LOG="/home/andreus/build.log"						# Cesta pre ulozenie build Logu
-ACTUAL_VERSION="1.20.0"								# Aktualna verzia
+ACTUAL_VERSION="1.21.0"								# Aktualna verzia
 SCRIPT_REL_PATH="/root/scripts/"						# Adresar so skriptamy na deploy war
 WPS_ADMIN_URL="http://$HOST_PORTAL:10039/wps/config"				# URL pre deploy WARka
 PROFILE_BUILD="0"								# Nastavenie buildenia cez profil
@@ -255,7 +255,7 @@ BOLD="\033[1m"
 BLINK="\033[5m"
 REVERSE="\033[7m"
 UNDERLINE="\033[4m"
-ACTUAL_SCRIPT_VERSION="3.1"
+ACTUAL_SCRIPT_VERSION="3.2"
 
 setProfileVariables(){
   eval tmp='HOST'$ACTUAL_PROFILE
@@ -820,70 +820,78 @@ deployWAR(){
 
   echo "- UPLOADING"
   echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam war:$GREEN $ISIS_DEVEL/Metis$BRANCH_SFX/Gui/target/MetisGuiProject-$SETUP_VERSION.war $NC"
-  scp $ISIS_DEVEL/Metis$BRANCH_SFX/Gui/target/MetisGuiProject-$SETUP_VERSION.war $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/installableApps/ 
+  echo -e "Pouzivam war:$GREEN $1 $NC"
+  scp $1 $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/installableApps/ 
   
-  echo "- DEPLOY START"
-  ssh $HOST_USER@$HOST_PORTAL "$VIRTUAL_PORTAL/bin/xmlaccess.sh" -in "$SCRIPT_REL_PATH/update.xmlaccess" -user $PORTAL_USER -pwd $PORTAL_PASS -url $WPS_ADMIN_URL -out "$SCRIPT_REL_PATH/deploymentresults.xmlaccess"
+  echo -e "<request xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"PortalConfig_1.4.xsd\" type=\"update\" create-oids=\"true\">
+	  <portal action=\"locate\">
+	    <web-app action=\"update\" active=\"true\" uid=\"$2.webmod\">
+	      <url>file:///\$server_root\$/installableApps/$3</url>
+	      <portlet-app action=\"update\" active=\"true\" uid=\"$2\"></portlet-app>
+	    </web-app>	
+	  </portal>
+	</request>" > tmpUpdate.xmlaccess
+	
+  scp tmpUpdate.xmlaccess $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/installableApps/ 
+  
+  
+  echo "- DEPLOY START"  
+  ssh $HOST_USER@$HOST_PORTAL "$VIRTUAL_PORTAL/bin/xmlaccess.sh" -in "$VIRTUAL_PORTAL/installableApps/tmpUpdate.xmlaccess" -user $PORTAL_USER -pwd $PORTAL_PASS -url $WPS_ADMIN_URL -out "$VIRTUAL_PORTAL/installableApps/deploymentresults.xmlaccess"
 
   echo "- DEPLOY FINISHED"
+  rm tmpUpdate.xmlaccess
+}
+
+deployMetisWAR(){
+
+  WAR_PATH="$ISIS_DEVEL/Metis$BRANCH_SFX/Gui/target/MetisGuiProject-$SETUP_VERSION.war"
+  APP_NAME="MetisGuiProject-$SETUP_VERSION.war"
+  APP_MODULE="MetisApp"
+  
+  deployWAR $WAR_PATH $APP_MODULE $APP_NAME
 }
 
 deployZberWar(){
-  echo "- UPLOADING"
-  echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam war:$GREEN $ISIS_DEVEL/Zber$BRANCH_SFX/Gui/target/ZberGuiProject-$SETUP_VERSION.war $NC"
-  scp $ISIS_DEVEL/Zber$BRANCH_SFX/Gui/target/ZberGuiProject-$SETUP_VERSION.war $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/installableApps/
- 
-  echo "- DEPLOY START"
-  ssh $HOST_USER@$HOST_PORTAL "$VIRTUAL_PORTAL/bin/xmlaccess.sh" -in "$SCRIPT_REL_PATH/ZBER/update.xmlaccess" -user $PORTAL_USER -pwd $PORTAL_PASS -url $WPS_ADMIN_URL -out "$SCRIPT_REL_PATH/ZBER/deploymentresults.xmlaccess"
 
-  echo "- DEPLOY FINISHED"
+  WAR_PATH="$ISIS_DEVEL/Zber$BRANCH_SFX/Gui/target/ZberGuiProject-$SETUP_VERSION.war"
+  APP_NAME="ZberGuiProject-$SETUP_VERSION.war"
+  APP_MODULE="ZberApp"
+  
+  deployWAR $WAR_PATH $APP_MODULE $APP_NAME
 }
 deployZbdWar(){
 
-  echo "- UPLOADING"
-  echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam war:$GREEN $ISIS_DEVEL/ZBD$BRANCH_SFX/Gui/target/ZBDGuiProject-$SETUP_VERSION.war $NC"
-  scp $ISIS_DEVEL/ZBD$BRANCH_SFX/Gui/target/ZBDGuiProject-$SETUP_VERSION.war $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/installableApps/ 
+  WAR_PATH="$ISIS_DEVEL/ZBD$BRANCH_SFX/Gui/target/ZBDGuiProject-$SETUP_VERSION.war"
+  APP_NAME="ZBDGuiProject-$SETUP_VERSION.war"
+  APP_MODULE="ZBDApp"
+  
+  deployWAR $WAR_PATH $APP_MODULE $APP_NAME
 
-  echo "- DEPLOY START"
-  ssh $HOST_USER@$HOST_PORTAL "$VIRTUAL_PORTAL/bin/xmlaccess.sh" -in "$SCRIPT_REL_PATH/ZBD/update.xmlaccess" -user $PORTAL_USER -pwd $PORTAL_PASS -url $WPS_ADMIN_URL -out "$SCRIPT_REL_PATH/ZBD/deploymentresults.xmlaccess"
-
-  echo "- DEPLOY FINISHED"
 }
 deployIamWar(){
-  echo "- UPLOADING"
-  echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam war:$GREEN $ISIS_DEVEL/Iam$BRANCH_SFX/Gui/target/IamGuiProject-$SETUP_VERSION.war $NC"
-  scp $ISIS_DEVEL/Iam$BRANCH_SFX/Gui/target/IamGuiProject-$SETUP_VERSION.war $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/installableApps/ 
 
-  echo "- DEPLOY START"
-  ssh $HOST_USER@$HOST_PORTAL "$VIRTUAL_PORTAL/bin/xmlaccess.sh" -in "$SCRIPT_REL_PATH/IAM/update.xmlaccess" -user $PORTAL_USER -pwd $PORTAL_PASS -url $WPS_ADMIN_URL -out "$SCRIPT_REL_PATH/IAM/deploymentresults.xmlaccess"
+  WAR_PATH="$ISIS_DEVEL/Iam$BRANCH_SFX/Gui/target/IamGuiProject-$SETUP_VERSION.war"
+  APP_NAME="IamGuiProject-$SETUP_VERSION.war"
+  APP_MODULE="IamApp"
+  
+  deployWAR $WAR_PATH $APP_MODULE $APP_NAME
 
-  echo "- DEPLOY FINISHED"
 }
 deployLogAppWar(){
-  echo "- UPLOADING"
-  echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam war:$GREEN $ISIS_DEVEL/LogApp$BRANCH_SFX/Gui/target/LogAppGuiProject-$SETUP_VERSION.war $NC"
-  scp $ISIS_DEVEL/LogApp$BRANCH_SFX/Gui/target/LogAppGuiProject-$SETUP_VERSION.war $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/installableApps/ 
 
-  echo "- DEPLOY START"
-  ssh $HOST_USER@$HOST_PORTAL "$VIRTUAL_PORTAL/bin/xmlaccess.sh" -in "$SCRIPT_REL_PATH/LogApp/update.xmlaccess" -user $PORTAL_USER -pwd $PORTAL_PASS -url $WPS_ADMIN_URL -out "$SCRIPT_REL_PATH/LogApp/deploymentresults.xmlaccess"
-
-  echo "- DEPLOY FINISHED"
+  WAR_PATH="$ISIS_DEVEL/LogApp$BRANCH_SFX/Gui/target/LogAppGuiProject-$SETUP_VERSION.war"
+  APP_NAME="LogAppGuiProject-$SETUP_VERSION.war"
+  APP_MODULE="LogApp"
+  
+  deployWAR $WAR_PATH $APP_MODULE $APP_NAME
 }
 deployIsisWar(){
-  echo "- UPLOADING"
-  echo -e "Deploy from $RED $SETUP_TYPE $NC"
-  echo -e "Pouzivam war:$GREEN $ISIS_DEVEL/IsisCommon$BRANCH_SFX/IsisMenu/target/IsisMenuProject-$SETUP_VERSION.war $NC"
-  scp $ISIS_DEVEL/IsisCommon$BRANCH_SFX/IsisMenu/target/IsisMenuProject-$SETUP_VERSION.war $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/installableApps/ 
 
-  echo "- DEPLOY START"
-  ssh $HOST_USER@$HOST_PORTAL "$VIRTUAL_PORTAL/bin/xmlaccess.sh" -in "$SCRIPT_REL_PATH/ISIS_GUI/update.xmlaccess" -user $PORTAL_USER -pwd $PORTAL_PASS -url $WPS_ADMIN_URL -out "$SCRIPT_REL_PATH/ISIS_GUI/deploymentresults.xmlaccess"
-
-  echo "- DEPLOY FINISHED"
+  WAR_PATH="$ISIS_DEVEL/IsisCommon$BRANCH_SFX/IsisMenu/target/IsisMenuProject-$SETUP_VERSION.war"
+  APP_NAME="IsisMenuGuiProject-$SETUP_VERSION.war"
+  APP_MODULE="IsisMenuApp"
+  
+  deployWAR $WAR_PATH $APP_MODULE $APP_NAME
 }
 
 showDeployLog(){
@@ -906,7 +914,7 @@ partialDeploy() {
     kk* ) deployIntrastatMock; 	partialDeploy $(echo $1|tr -d 'kk') ;;
     k* ) deployIntrastat; 	partialDeploy $(echo $1|tr -d 'k') ;;    
     
-    u* ) deployWAR; 		partialDeploy $(echo $1|tr -d 'u') ;;    
+    u* ) deployMetisWAR; 		partialDeploy $(echo $1|tr -d 'u') ;;    
     v* ) deployZberWar; 	partialDeploy $(echo $1|tr -d 'v') ;;
     w* ) deployZbdWar; 		partialDeploy $(echo $1|tr -d 'w') ;;
     x* ) deployIamWar; 		partialDeploy $(echo $1|tr -d 'x') ;;
@@ -924,7 +932,7 @@ deploy() {
 
   if [ $1 = "ALL" ]
   then
-    deployWAR
+    deployMetisWAR
     deployZberWar
     deployIsisWar
     deployIamWar
@@ -1283,21 +1291,8 @@ buildAndDeploy(){
 }
 whatIsNew(){
 clear  
-  echo -e $UNDERLINE"Verzia:3.1 $NE"
+  echo -e $UNDERLINE"Verzia:3.2 $NE"
   echo ""
-  echo ""
-  echo -e "$RED 08.09.2014: $NC"
-  echo "----------------------------------------------------------------------------"
-  echo "* Version 2.4"
-  echo "* Pridany deploy KRAZ-MOCK, potrebne pridat: "
-  echo "* KRAZ_MOCK_1=\"Kraz2\$BRANCH_SFX/Ear-mock/target/Kraz.ear\"
-	  KRAZ_MOCK_2=\"Kraz.ear\"
-	  KRAZ_MOCK_3=\"Kraz\"
-	  KRAZ_MOCK_4=\"KrazBusinessServiceImpl-mock-\$SETUP_VERSION.jar\"
-	  KRAZ_MOCK_5=\"KrazBusinessServiceImpl-mock-\$SETUP_VERSION.jar\"
-	  KRAZ_MOCK_6=\"Kraz Gui\"
-	  KRAZ_MOCK_7=\"KrazGui-\$SETUP_VERSION.war\"
-	  "
   echo ""
   echo -e "$RED 16.09.2014: $NC"
   echo "----------------------------------------------------------------------------"
@@ -1337,6 +1332,16 @@ clear
   echo "----------------------------------------------------------------------------
   * Version 3.1
   * Zmena ciest k EJB suborom
+  "
+  
+  echo ""  
+  echo -e "$RED 11.11.2014: $NC"
+  echo "----------------------------------------------------------------------------
+  * Version 3.2
+  * Genericky vytvarany update.xmlaccess pre deployment WAR, nieje uz nutne pri prechode na vyssiu verziu
+    updatovat deploy skripty cez menu, vysledny deploymentResult.xmlaccess sa odteraz nachadza v installableApps 
+    na portal serveri a prepisuje sa kazdym dalsim deploymentom WAR aplikacie (nieje uz viazany na aplikaciu).
+    ~/scripts na portal serveri sa stavaju deprecated
   "
   read
 }
