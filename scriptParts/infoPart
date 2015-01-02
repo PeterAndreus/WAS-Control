@@ -1,34 +1,9 @@
 
 whatIsNew(){
 clear  
-  echo -e $UNDERLINE"Verzia:3.2 $NE"
+  echo -e $UNDERLINE"Verzia:3.3 $NE"
   echo ""
   echo ""
-  echo -e "$RED 16.09.2014: $NC"
-  echo "----------------------------------------------------------------------------"
-  echo "* Version 2.5"
-  echo "* Pridany deploy Intrastat a Intrastat-mock, potrebne pridat: "
-  echo "*   #INTRASTAT
-	    INTR1=\"Intrastat\$BRANCH_SFX/Ear/target/Intrastat.ear\"
-	    INTR2=\"Intrastat.ear\"
-	    INTR3=\"Intrastat\"
-	    INTR4=\"IntrastatCoreDaoImpl-\$SETUP_VERSION.jar\"
-	    INTR5=\"IntrastatCoreDaoImpl-\$SETUP_VERSION.jar\"
-	    INTR6=\"IntrastatBusinessServiceImpl-\$SETUP_VERSION.jar\"
-	    INTR7=\"IntrastatBusinessServiceImpl-\$SETUP_VERSION.jar\"
-	    INTR8=\"Intrastat Gui\"
-	    INTR9=\"IntrastatGui-\$SETUP_VERSION.war\"
-
-	    #INTRASTAT_MOCK
-	    INTR_MOCK_1=\"Intrastat\$BRANCH_SFX/Ear-mock/target/Intrastat.ear\"
-	    INTR_MOCK_2=\"Intrastat.ear\"
-	    INTR_MOCK_3=\"Intrastat\"
-	    INTR_MOCK_4=\"IntrastatBusinessServiceImpl-mock-\$SETUP_VERSION.jar\"
-	    INTR_MOCK_5=\"IntrastatBusinessServiceImpl-mock-\$SETUP_VERSION.jar\"
-	    INTR_MOCK_6=\"Intrastat Gui\"
-	    INTR_MOCK_7=\"IntrastatGui-\$SETUP_VERSION.war\" 
-	  "
-  echo ""  
   echo -e "$RED 07.10.2014: $NC"
   
   echo "----------------------------------------------------------------------------
@@ -45,13 +20,10 @@ clear
   "
   
   echo ""  
-  echo -e "$RED 11.11.2014: $NC"
+  echo -e "$RED 01.12.2014: $NC"
   echo "----------------------------------------------------------------------------
-  * Version 3.2
-  * Genericky vytvarany update.xmlaccess pre deployment WAR, nieje uz nutne pri prechode na vyssiu verziu
-    updatovat deploy skripty cez menu, vysledny deploymentResult.xmlaccess sa odteraz nachadza v installableApps 
-    na portal serveri a prepisuje sa kazdym dalsim deploymentom WAR aplikacie (nieje uz viazany na aplikaciu).
-    ~/scripts na portal serveri sa stavaju deprecated
+  * Version 3.3
+  * Poriesene .jar zmeny
   "
   read
 }

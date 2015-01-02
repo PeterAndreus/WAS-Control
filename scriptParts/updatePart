@@ -56,11 +56,13 @@ removeOldJars(){
   let "OLD_VERSION = $(echo $SETUP_VERSION | cut -d"." -f2 ) -1"
   RMIAMSECURITY="$VIRTUAL_PORTAL/shared/ext/IsisSecurityProject-*.jar"
   RMIAMLOGINFACADE="$VIRTUAL_PORTAL/shared/ext/IamBusinessServiceFacadeForCustomLoginProject-*.jar"
-  RMIAMLOGIN="$VIRTUAL_PORTAL/shared/app/IamAuthCustomLoginModuleProject-*.jar"
+  RMIAMLOGIN_OLD="$VIRTUAL_PORTAL/shared/app/IamAuthCustomLoginModuleProject-*.jar"
+  RMIAMLOGIN="$VIRTUAL_PORTAL/shared/ext/IamAuthCustomLoginModuleProject-*.jar"
   RMCOMMONUTILS="$VIRTUAL_WAS/lib/ext/CommonUtilsProject-*.jar"
   RMEJBPORTAL="$VIRTUAL_WAS/lib/ext/EjbConfigProject-*.jar"
   RMEJBWAS="$VIRTUAL_WAS/lib/ext/EjbConfigProject-*.jar"
   RMCOMMONUTILSWAS="$VIRTUAL_WAS/lib/ext/CommonUtilsProject-*.jar"
+  RMIPFILTER="$VIRTUAL_PORTAL/shared/app/IamAuthIpFilterProject-*.jar"
   echo "Navrhujem mazat veci:"
   echo $RMIAMSECURITY;
   echo $RMIAMLOGINFACADE;
@@ -69,17 +71,20 @@ removeOldJars(){
   echo $RMEJBPORTAL;
   echo $RMEJBWAS;
   echo $RMCOMMONUTILSWAS;
+  echo $RMIPFILTER;
   echo
   echo "Je to v poriadku?(y/N)"
   read remover
-  if [ "$remover" == "y" ] || [ "$remover" == "Y" ] || [ "$remover" == "yes" ] || [ "$remover" == "yES" ] || [ "$remover" == "Yes" ] || [ "$remover" == "YES" ] 
+  if [[ $remover == [yY][eE][sS] ]]  || [[ $remover == [yY] ]]
   then
     echo "Mazem"
     ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMSECURITY"
     ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMLOGINFACADE"
     ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMLOGIN"
+    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMLOGIN_OLD"
     ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMCOMMONUTILS"
     ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMEJBPORTAL"
+    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIPFILTER"
     ssh $HOST_USER@$HOST "rm -fvr $RMCOMMONUTILSWASL"
     ssh $HOST_USER@$HOST "rm -fvr $RMEJBWAS"
     ssh $HOST_USER@$HOST "rm -fvr $RMCOMMONUTILSWAS"
@@ -101,7 +106,9 @@ sendJars(){
   echo '...'
   scp $ISIS_DEVEL/Iam/Business/ServiceFacadeForCustomLogin/target/IamBusinessServiceFacadeForCustomLoginProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/ext/
   echo '...'
-  scp $ISIS_DEVEL/Iam$BRANCH_SFX/Auth/CustomLoginModule/target/IamAuthCustomLoginModuleProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/app/
+  scp $ISIS_DEVEL/Iam$BRANCH_SFX/Auth/CustomLoginModule/target/IamAuthCustomLoginModuleProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/ext/
+  echo '...'
+  scp $ISIS_DEVEL/Iam$BRANCH_SFX/Auth/IpFilter/target/IamAuthIpFilterProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/app/
   echo '...'
   scp $COMMON_DEVEL/CommonUtils/target/CommonUtilsProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_WAS/lib/ext/
   echo '...'

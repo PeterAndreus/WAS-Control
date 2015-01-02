@@ -255,7 +255,7 @@ BOLD="\033[1m"
 BLINK="\033[5m"
 REVERSE="\033[7m"
 UNDERLINE="\033[4m"
-ACTUAL_SCRIPT_VERSION="3.2"
+ACTUAL_SCRIPT_VERSION="3.3"
 
 setProfileVariables(){
   eval tmp='HOST'$ACTUAL_PROFILE
@@ -1291,34 +1291,9 @@ buildAndDeploy(){
 }
 whatIsNew(){
 clear  
-  echo -e $UNDERLINE"Verzia:3.2 $NE"
+  echo -e $UNDERLINE"Verzia:3.3 $NE"
   echo ""
   echo ""
-  echo -e "$RED 16.09.2014: $NC"
-  echo "----------------------------------------------------------------------------"
-  echo "* Version 2.5"
-  echo "* Pridany deploy Intrastat a Intrastat-mock, potrebne pridat: "
-  echo "*   #INTRASTAT
-	    INTR1=\"Intrastat\$BRANCH_SFX/Ear/target/Intrastat.ear\"
-	    INTR2=\"Intrastat.ear\"
-	    INTR3=\"Intrastat\"
-	    INTR4=\"IntrastatCoreDaoImpl-\$SETUP_VERSION.jar\"
-	    INTR5=\"IntrastatCoreDaoImpl-\$SETUP_VERSION.jar\"
-	    INTR6=\"IntrastatBusinessServiceImpl-\$SETUP_VERSION.jar\"
-	    INTR7=\"IntrastatBusinessServiceImpl-\$SETUP_VERSION.jar\"
-	    INTR8=\"Intrastat Gui\"
-	    INTR9=\"IntrastatGui-\$SETUP_VERSION.war\"
-
-	    #INTRASTAT_MOCK
-	    INTR_MOCK_1=\"Intrastat\$BRANCH_SFX/Ear-mock/target/Intrastat.ear\"
-	    INTR_MOCK_2=\"Intrastat.ear\"
-	    INTR_MOCK_3=\"Intrastat\"
-	    INTR_MOCK_4=\"IntrastatBusinessServiceImpl-mock-\$SETUP_VERSION.jar\"
-	    INTR_MOCK_5=\"IntrastatBusinessServiceImpl-mock-\$SETUP_VERSION.jar\"
-	    INTR_MOCK_6=\"Intrastat Gui\"
-	    INTR_MOCK_7=\"IntrastatGui-\$SETUP_VERSION.war\" 
-	  "
-  echo ""  
   echo -e "$RED 07.10.2014: $NC"
   
   echo "----------------------------------------------------------------------------
@@ -1335,13 +1310,10 @@ clear
   "
   
   echo ""  
-  echo -e "$RED 11.11.2014: $NC"
+  echo -e "$RED 01.12.2014: $NC"
   echo "----------------------------------------------------------------------------
-  * Version 3.2
-  * Genericky vytvarany update.xmlaccess pre deployment WAR, nieje uz nutne pri prechode na vyssiu verziu
-    updatovat deploy skripty cez menu, vysledny deploymentResult.xmlaccess sa odteraz nachadza v installableApps 
-    na portal serveri a prepisuje sa kazdym dalsim deploymentom WAR aplikacie (nieje uz viazany na aplikaciu).
-    ~/scripts na portal serveri sa stavaju deprecated
+  * Version 3.3
+  * Poriesene .jar zmeny
   "
   read
 }
@@ -1557,7 +1529,7 @@ addEJBCustomPropertyWAS(){
     echo "Pridavam customProperty: $property s value: $actualValue"
     echo "Je to v poriadku?(y/N)"
     read adder
-    if [ "$adder" == "y" ] || [ "$adder" == "Y" ] || [ "$adder" == "yes" ] || [ "$adder" == "yES" ] || [ "$adder" == "Yes" ] || [ "$adder" == "YES" ] 
+    if [[ $adder == [yY][eE][sS] ]]  || [[ $adder == [yY] ]]
     then
       ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminConfig.create('J2EEResourceProperty', '(cells/$CELL|resources.xml#$J2EE_ENV_ENTRY)', '[[name \\\"$property\\\"] [type \\\"java.lang.String\\\"] [description \\\"Added $datum\\\"] [value \\\"$actualValue\\\"] [required \\\"false\\\"]]')\""
     fi
@@ -1580,7 +1552,7 @@ addEJBCustomPropertyPortal(){
     echo "Pridavam customProperty: $property s value: $actualValue"
     echo "Je to v poriadku?(y/N)"
     read adder
-    if [ "$adder" == "y" ] || [ "$adder" == "Y" ] || [ "$adder" == "yes" ] || [ "$adder" == "yES" ] || [ "$adder" == "Yes" ] || [ "$adder" == "YES" ] 
+    if [[ $adder == [yY][eE][sS] ]]  || [[ $adder == [yY] ]]
     then
       echo "AdminConfig.create('J2EEResourceProperty', '(cells/$CELL_PORTAL|resources.xml#$J2EE_ENV_ENTRY)', '[[name \"$property\"] [type \"java.lang.String\"] [description \"Added $datum\"] [value \"$actualValue\"] [required \"false\"]]')" >> tmpJython.py
     fi
@@ -1612,7 +1584,7 @@ updateEJBCustomPropertyWAS(){
     echo "Nova hodnota: -$actualValue-"
     echo "Je to v poriadku?(y/N)"
     read updater
-    if [ "$updater" == "y" ] || [ "$updater" == "Y" ] || [ "$updater" == "yes" ] || [ "$updater" == "yES" ] || [ "$updater" == "Yes" ] || [ "$updater" == "YES" ] 
+    if [[ $updater == [yY][eE][sS] ]]  || [[ $updater == [yY] ]]
     then
       ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminConfig.modify('(cells/$CELL|resources.xml#$remoteJ2EEResourceProperty)', '[[name \\\"$property\\\"] [type \\\"java.lang.String\\\"] [description \\\"Updated $datum\\\"] [value \\\"$actualValue\\\"] [required \\\"false\\\"]]')\""
     fi
@@ -1637,7 +1609,7 @@ updateEJBCustomPropertyPortal(){
     echo "Nova hodnota: -$actualValue-"
     echo "Je to v poriadku?(y/N)"
     read updater
-    if [ "$updater" == "y" ] || [ "$updater" == "Y" ] || [ "$updater" == "yes" ] || [ "$updater" == "yES" ] || [ "$updater" == "Yes" ] || [ "$updater" == "YES" ] 
+    if [[ $updater == [yY][eE][sS] ]]  || [[ $updater == [yY] ]]
     then
 	echo "AdminConfig.modify('(cells/$CELL_PORTAL|resources.xml#$remoteJ2EEResourceProperty)', '[[name \"$property\"] [type \"java.lang.String\"] [description \"Updated $datum\"] [value \"$actualValue\"] [required \"false\"]]')" >> tmpJython.py
     fi
@@ -1665,7 +1637,7 @@ removeEJBCustomPropertyWAS(){
     echo "Stara hodnota: -$remoteValue-"
     echo "Je to v poriadku?(y/N)"
     read deleter
-    if [ "$deleter" == "y" ] || [ "$deleter" == "Y" ] || [ "$deleter" == "yes" ] || [ "$deleter" == "yES" ] || [ "$deleter" == "Yes" ] || [ "$deleter" == "YES" ] 
+    if [[ $deleter == [yY][eE][sS] ]]  || [[ $deleter == [yY] ]]
     then
       ssh $HOST_USER@$HOST "$BIN/wsadmin.sh -lang jython -user $USER -password $PASS -c \"AdminConfig.remove('(cells/$CELL|resources.xml#$remoteJ2EEResourceProperty)')\""
     fi
@@ -1687,7 +1659,7 @@ removeEJBCustomPropertyPortal(){
     echo "Stara hodnota: -$remoteValue-"
     echo "Je to v poriadku?(y/N)"
     read deleter
-    if [ "$deleter" == "y" ] || [ "$deleter" == "Y" ] || [ "$deleter" == "yes" ] || [ "$deleter" == "yES" ] || [ "$deleter" == "Yes" ] || [ "$deleter" == "YES" ] 
+    if [[ $deleter == [yY][eE][sS] ]]  || [[ $deleter == [yY] ]]
     then
 	echo "AdminConfig.remove('(cells/$CELL_PORTAL|resources.xml#$remoteJ2EEResourceProperty)')" >> tmpJython.py
     fi
@@ -1863,11 +1835,13 @@ removeOldJars(){
   let "OLD_VERSION = $(echo $SETUP_VERSION | cut -d"." -f2 ) -1"
   RMIAMSECURITY="$VIRTUAL_PORTAL/shared/ext/IsisSecurityProject-*.jar"
   RMIAMLOGINFACADE="$VIRTUAL_PORTAL/shared/ext/IamBusinessServiceFacadeForCustomLoginProject-*.jar"
-  RMIAMLOGIN="$VIRTUAL_PORTAL/shared/app/IamAuthCustomLoginModuleProject-*.jar"
+  RMIAMLOGIN_OLD="$VIRTUAL_PORTAL/shared/app/IamAuthCustomLoginModuleProject-*.jar"
+  RMIAMLOGIN="$VIRTUAL_PORTAL/shared/ext/IamAuthCustomLoginModuleProject-*.jar"
   RMCOMMONUTILS="$VIRTUAL_WAS/lib/ext/CommonUtilsProject-*.jar"
   RMEJBPORTAL="$VIRTUAL_WAS/lib/ext/EjbConfigProject-*.jar"
   RMEJBWAS="$VIRTUAL_WAS/lib/ext/EjbConfigProject-*.jar"
   RMCOMMONUTILSWAS="$VIRTUAL_WAS/lib/ext/CommonUtilsProject-*.jar"
+  RMIPFILTER="$VIRTUAL_PORTAL/shared/app/IamAuthIpFilterProject-*.jar"
   echo "Navrhujem mazat veci:"
   echo $RMIAMSECURITY;
   echo $RMIAMLOGINFACADE;
@@ -1876,17 +1850,20 @@ removeOldJars(){
   echo $RMEJBPORTAL;
   echo $RMEJBWAS;
   echo $RMCOMMONUTILSWAS;
+  echo $RMIPFILTER;
   echo
   echo "Je to v poriadku?(y/N)"
   read remover
-  if [ "$remover" == "y" ] || [ "$remover" == "Y" ] || [ "$remover" == "yes" ] || [ "$remover" == "yES" ] || [ "$remover" == "Yes" ] || [ "$remover" == "YES" ] 
+  if [[ $remover == [yY][eE][sS] ]]  || [[ $remover == [yY] ]]
   then
     echo "Mazem"
     ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMSECURITY"
     ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMLOGINFACADE"
     ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMLOGIN"
+    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIAMLOGIN_OLD"
     ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMCOMMONUTILS"
     ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMEJBPORTAL"
+    ssh $HOST_USER@$HOST_PORTAL "rm -fvr $RMIPFILTER"
     ssh $HOST_USER@$HOST "rm -fvr $RMCOMMONUTILSWASL"
     ssh $HOST_USER@$HOST "rm -fvr $RMEJBWAS"
     ssh $HOST_USER@$HOST "rm -fvr $RMCOMMONUTILSWAS"
@@ -1908,7 +1885,9 @@ sendJars(){
   echo '...'
   scp $ISIS_DEVEL/Iam/Business/ServiceFacadeForCustomLogin/target/IamBusinessServiceFacadeForCustomLoginProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/ext/
   echo '...'
-  scp $ISIS_DEVEL/Iam$BRANCH_SFX/Auth/CustomLoginModule/target/IamAuthCustomLoginModuleProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/app/
+  scp $ISIS_DEVEL/Iam$BRANCH_SFX/Auth/CustomLoginModule/target/IamAuthCustomLoginModuleProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/ext/
+  echo '...'
+  scp $ISIS_DEVEL/Iam$BRANCH_SFX/Auth/IpFilter/target/IamAuthIpFilterProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_PORTAL/shared/app/
   echo '...'
   scp $COMMON_DEVEL/CommonUtils/target/CommonUtilsProject-$SETUP_VERSION.jar $HOST_USER@$HOST_PORTAL:$VIRTUAL_WAS/lib/ext/
   echo '...'
